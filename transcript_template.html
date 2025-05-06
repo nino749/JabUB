@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Discord Transkript - {{ channel_name }}</title>
+    <style>
+        body {
+            background-color: #36393f;
+            color: #dcddde;
+            font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
+        }
+        .message {
+            background-color: #2f3136;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .timestamp {
+            color: #72767d;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .author {
+            font-weight: bold;
+            color: #fff;
+            margin-right: 5px;
+        }
+        .content {
+            color: #dcddde;
+            word-break: break-word;
+        }
+        .chat-image {
+            max-width: 300px;
+            height: auto;
+            margin-top: 5px;
+            border-radius: 5px;
+            display: block;
+        }
+        .embed {
+            border-left: 4px solid #4f545c;
+            background-color: #202225;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .embed-title {
+            font-weight: bold;
+            color: #00b0f4;
+        }
+        .embed-description {
+            margin-top: 5px;
+        }
+        .embed-field {
+            margin-top: 8px;
+            background-color: #2f3136;
+            padding: 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Discord Ticket Transkript - {{ channel_name }}</h1>
+
+    {% for message in messages %}
+    <div class="message">
+        <div class="message-header">
+            <img class="avatar" src="{{ message.avatar_url }}" alt="{{ message.author_name }}">
+            <span class="timestamp">{{ message.timestamp }}</span>
+            <span class="author">{{ message.author_name }}:</span>
+        </div>
+        <div class="content">{{ message.content }}</div>
+
+        {% for attachment_url in message.attachments %}
+            <img class="chat-image" src="{{ attachment_url }}" alt="Angehängtes Bild">
+        {% endfor %}
+
+        {% for embed in message.embeds %}
+        <div class="embed" style="border-left-color: {{ embed.color }};">
+            {% if embed.title %}
+                <div class="embed-title">{{ embed.title }}</div>
+            {% endif %}
+            {% if embed.description %}
+                <div class="embed-description">{{ embed.description }}</div>
+            {% endif %}
+            {% for field in embed.fields %}
+                <div class="embed-field">
+                    <strong>{{ field.name }}</strong><br>
+                    {{ field.value }}
+                </div>
+            {% endfor %}
+            {% if embed.image_url %}
+                <img class="chat-image" src="{{ embed.image_url }}" alt="Embed Image">
+            {% endif %}
+            {% if embed.thumbnail_url %}
+                <img class="chat-image" src="{{ embed.thumbnail_url }}" alt="Embed Thumbnail" style="max-width: 100px; float: right;">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</body>
+</html>
