@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import Intents, TextStyle
-from discord.ui import Modal, TextInput, View, Button
+from discord.ui import Modal, TextInput, View, Button, Select
 from discord import app_commands
 from dotenv import dotenv_values
 import logging
@@ -13,6 +13,7 @@ import aiohttp
 from jinja2 import Environment, FileSystemLoader
 import io
 import json
+import markdown
 
 logging.basicConfig(level=logging.INFO, format='\033[32mINFO      \033[97m%(message)s')
 logger = logging.getLogger(__name__)
@@ -22,15 +23,14 @@ TOKEN = config.get('DISCORD_TOKEN')
 SYNC_SERVER = config.get('SERVER')
 I_CHANNEL_ID = config.get('I_CHANNEL')
 TRANS_CHANNEL_ID = config.get('TRANS_CHANNEL')
+TEAM_ROLE = config.get('TEAM_ROLE')
+SUPPORT_ROLE_NAME = config.get('SUPPORT_ROLE_NAME')
+SUPPORTHILFE_ROLE_NAME = config.get('SUPPORTHILFE_ROLE_NAME')
 
 GUILD_ID = discord.Object(id=SYNC_SERVER)
 i_channel = I_CHANNEL_ID
 
 TICKET_SETUP_FILE = 'ticket_setup_message.json'
-
-SUPPORT_ROLE_NAME = "Support"
-SUPPORTHILFE_ROLE_NAME = "Supporthilfe"
-
 DELETE_USER = ""
 
 TICKET_CREATED_EMOJI = "<:check:1368203772123283506>"
@@ -41,8 +41,9 @@ DELETE_EMOJI = "<:bin:1368203374092353627>"
 TICKET_OPEN_EMOJI = "<:creation:1368203348066439190>"
 TRANSCRIPT_EMOJI = "<:transcript:1368207338162491513>"
 REOPEN_EMOJI = "<:unlock:1368203388231094373>"
-INFO_EMOJI = "<:info:1368204682820063303>"
+INFO_EMOJI = "<:info:1369730231924953169>"
 LOADING_EMOJI = "<a:2923printsdark:1367119727763259533>"
+DANCE_EMOJI = "<a:dance:1369716119073587290>"
 
 danger = discord.ButtonStyle.danger
 secondary = discord.ButtonStyle.secondary
@@ -131,12 +132,12 @@ class ThreadCreationModal(Modal, title='Ticket erstellen'):
             thread_embed.add_field(name="Aufgaben Bereich", value=choice_display, inline=True)
 
             async def delete_thread_confirmation(interaction: discord.Interaction):
+                if not any(role.name in [SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in interaction.user.roles):
+                    await interaction.response.send_message("Du hast keine Berechtigung, diese Aktion auszuführen.", ephemeral=True)
+                    return
+
                 async def delete_yes_callback(interaction: discord.Interaction):
                     await interaction.response.send_message(f"Lösche den Thread {DELETE_EMOJI}")
-                    await thread.delete()
-                    
-                    global DELETE_USER
-                    DELETE_USER = interaction.user
 
                 async def delete_no_callback(interaction: discord.Interaction):
                     await interaction.message.delete()
@@ -154,9 +155,17 @@ class ThreadCreationModal(Modal, title='Ticket erstellen'):
                 await interaction.response.send_message(view=view, content=f"> {interaction.user.mention} Bist du dir sicher, dass du das Ticket **löschen** möchtest?", ephemeral=False)
 
             async def archive_thread_callback(interaction: discord.Interaction):
+                if not any(role.name in [SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in interaction.user.roles):
+                    await interaction.response.send_message("Du hast keine Berechtigung, diese Aktion auszuführen.", ephemeral=True)
+                    return
+
                 await interaction.response.send_modal(ThreadModalRename())
 
             async def trans_button_callback(interaction: discord.Interaction):
+                if not any(role.name in [SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in interaction.user.roles):
+                    await interaction.response.send_message("Du hast keine Berechtigung, diese Aktion auszuführen.", ephemeral=True)
+                    return
+
                 await interaction.response.send_message(f"> {INFO_EMOJI} Erstelle das Transkript {LOADING_EMOJI}")
 
                 channel = interaction.channel
@@ -178,11 +187,13 @@ class ThreadCreationModal(Modal, title='Ticket erstellen'):
                         }
                         embed_data.append(embed_dict)
 
+                    html_content = markdown.markdown(msg.clean_content)
+
                     render_messages.append({
                         "author_name": msg.author.display_name,
                         "avatar_url": msg.author.display_avatar.url,
                         "timestamp": msg.created_at.strftime('%d-%m-%Y %H:%M'),
-                        "content": discord.utils.escape_markdown(msg.clean_content),
+                        "content": html_content,
                         "attachments": [
                             att.url for att in msg.attachments
                             if att.content_type and att.content_type.startswith("image/")
@@ -204,23 +215,16 @@ class ThreadCreationModal(Modal, title='Ticket erstellen'):
                     messages=render_messages
                 )
 
-                transcript_file = discord.File(
-                    io.BytesIO(rendered_html.encode()),
-                    filename=f"transcript_{channel.name}.html"
-                )
-                
-                await interaction.edit_original_response(content=f"{INFO_EMOJI} Transkript erstellt!")
-                
                 buffer = io.BytesIO(rendered_html.encode())
                 print(f"DEBUG     Größe des Buffers (Follow-up): {buffer.getbuffer().nbytes} Bytes")
 
-                await interaction.followup.send(embed=discord.Embed(description=f"{INFO_EMOJI} Hier ist das Transkript von **{channel.name}**.", color=0x00ff00), file=transcript_file)
-                
                 trans_channel = bot.get_channel(int(TRANS_CHANNEL_ID))
                 
                 buffer_trans = io.BytesIO(rendered_html.encode())
+                await interaction.edit_original_response(content=f"> {INFO_EMOJI} Transkript in {trans_channel.mention} erstellt!")
+
                 print(f"DEBUG     Größe des Buffers (trans_channel): {buffer_trans.getbuffer().nbytes} Bytes")
-                transcript_file_trans = discord.File(buffer_trans, filename=f"transcript_{channel.name}.html")
+                transcript_file_trans = discord.File(buffer_trans, filename=f"transcript von {channel.name}.html")
                 
                 message_count = 0
                 async for _ in channel.history(limit=None):
@@ -229,11 +233,11 @@ class ThreadCreationModal(Modal, title='Ticket erstellen'):
                 member_count = 0
                 
                 members = channel.members
-                for member in members:
+                for each in members:
                     member_count += 1
                     
                 embed = discord.Embed(
-                    title=f"{INFO_EMOJI} Transkript von {channel.name}",
+                    title=f"{INFO_EMOJI} Transkript - {channel.name}",
                     description=f"**Stats**",
                     color=0x00ff00
                 )
@@ -241,24 +245,28 @@ class ThreadCreationModal(Modal, title='Ticket erstellen'):
                 
                 embed.add_field(name="Nachrichten", value=message_count, inline=True)
                 embed.add_field(name="Benutzer", value=member_count, inline=True)
-                embed.add_field(name="Ticket Ersteller", value=ticket_creator, inline=True)
                 embed.add_field(name="Geschlossen von", value=DELETE_USER, inline=True)
                 embed.set_footer(text="JabUB.css | by nino.css")
-
-                
+                embed.timestamp = discord.utils.utcnow()
                 await trans_channel.send(embed=embed, file=transcript_file_trans)
 
             async def reopen_button_callback(interaction: discord.Interaction):
+                if not any(role.name in [SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in interaction.user.roles):
+                    await interaction.response.send_message("Du hast keine Berechtigung, diese Aktion auszuführen.", ephemeral=True)
+                    return
+
                 async for message in interaction.channel.history(limit=10):
                     if message.author == bot.user:
                         await message.delete()
                         break
 
-                await interaction.response.send_message(f"{ticket_creator.mention} Das Ticket wurde neu eröffnet.")
+                await interaction.response.send_message(f"> {ticket_creator.mention} Das Ticket wurde neu eröffnet.")
 
             async def close_thread_confirmation(interaction: discord.Interaction):
                 async def yes_callback(interaction: discord.Interaction):
                     await interaction.response.defer()
+                    global DELETE_USER
+                    DELETE_USER = interaction.user.name
 
                     archive_button = Button(emoji=ARCHIVE_EMOJI, style=secondary)
                     archive_button.callback = archive_thread_callback
@@ -277,17 +285,17 @@ class ThreadCreationModal(Modal, title='Ticket erstellen'):
                     view.add_item(reopen_button)
                     view.add_item(archive_button)
                     view.add_item(trans_button)
-
+                    
                     has_required_role = False
 
-                    if support_role in interaction.user.roles or supporthilfe_role in interaction.user.roles:
+                    if TEAM_ROLE in interaction.user.roles or SUPPORT_ROLE_NAME in interaction.user.roles or SUPPORTHILFE_ROLE_NAME in interaction.user.roles:
                         has_required_role = True
 
-                    if has_required_role == True:
-                        await interaction.channel.send(view=view, content=f"> Ich habe **{ticket_creator}** nicht entfernt - User teil des Teams.")
+                    if has_required_role:
+                        await interaction.channel.send(view=view, content=f"> Ich habe **{ticket_creator}** nicht entfernt - Teammitglied. Man kann es nun {TRASHCAN_EMOJI} `Löschen`, {REOPEN_EMOJI} `Neu eröffnen`, {ARCHIVE_EMOJI} `Archivieren` oder {TRANSCRIPT_EMOJI} `Transkribieren`.")
                     else:
                         await thread.remove_user(ticket_creator)
-                        await interaction.channel.send(view=view, content=f"> **{ticket_creator}** wurde vom Ticket entfernt. Du kannst es nun `Löschen`, `Neu eröffnen`, `Archivieren` oder `Transkribieren`.")
+                        await interaction.channel.send(view=view, content=f"> **{ticket_creator}** wurde vom Ticket entfernt. Man kann es nun {TRASHCAN_EMOJI} `Löschen`, {REOPEN_EMOJI} `Neu eröffnen`, {ARCHIVE_EMOJI} `Archivieren` oder {TRANSCRIPT_EMOJI} `Transkribieren`.")
 
                 async def no_callback(interaction: discord.Interaction):
                     await interaction.response.defer()
@@ -317,7 +325,7 @@ class ThreadCreationModal(Modal, title='Ticket erstellen'):
             await thread.send(
                 view=view,
                 embed=thread_embed,
-                content=f"{interaction.user.mention} Bitte schildere dein Problem oder deine Frage ausführlich, {support_role.mention if support_role else '@Support (Rolle nicht gefunden)'} {supporthilfe_role.mention if supporthilfe_role else '@Supporthilfe (Rolle nicht gefunden)'} wird dir sobald wie möglich helfen!"
+                content=f"Bitte schildere dein Problem oder deine Frage ausführlich, {support_role.mention if support_role else '@Support (Rolle nicht gefunden)'} {supporthilfe_role.mention if supporthilfe_role else '@Supporthilfe (Rolle nicht gefunden)'} wird dir sobald wie möglich helfen!"
             )
             await interaction.response.send_message(f"> Ticket erstellt in {thread.mention}!", ephemeral=True)
 
@@ -376,7 +384,6 @@ class Bot(commands.Bot):
 
 bot = Bot()
 
-
 @bot.tree.command(name="tickets", description="Setup Tickets in this channel!", guild=GUILD_ID)
 @commands.has_permissions(administrator=True)
 async def setup(interaction: discord.Interaction):
@@ -404,14 +411,19 @@ async def setup(interaction: discord.Interaction):
 
 
 
-def simple_embed(text: str, color: int = 0x00ff00):
-    return discord.Embed(description=text, color=color)
-
 yt_opts = {
     'format': 'bestaudio/best',
     'noplaylist': False,
-    'quiet': False
+    'quiet': False,
+    'include_thumbnail': True,
+    'source_address': '0.0.0.0'
 }
+
+def simple_embed(text: str, thumbnail: str | None = None, color: int = 0x00ff00):
+    embed = discord.Embed(description=text, color=color)
+    if thumbnail:
+        embed.set_thumbnail(url=thumbnail)
+    return embed
 
 class Queue:
     def __init__(self):
@@ -423,6 +435,9 @@ class Queue:
     
     def get_next(self):
         return self.queue.popleft() if self.queue else None
+
+    def is_empty(self):
+        return len(self.queue) == 0
 
 guild_queues = {}
 
@@ -444,7 +459,7 @@ async def play(interaction: discord.Interaction, url: str):
         await channel.connect()
         voice_client = interaction.guild.voice_client
 
-    await interaction.followup.send(
+    loading_message = await interaction.followup.send(
         embed=simple_embed("Loading music <a:2923printsdark:1367119727763259533>")
     )
 
@@ -471,63 +486,84 @@ async def play(interaction: discord.Interaction, url: str):
             info = entries[0]
             audio_url = info.get("url")
             title = info.get("title", "Unknown title")
+            thumbnail = info.get("thumbnail")
             await bot.change_presence(activity=discord.Activity(name=title, type=discord.ActivityType.listening))
-            
+
             try:
                 source = await discord.FFmpegOpusAudio.from_probe(audio_url, method='fallback')
-                queue.add(source, title)
-                await interaction.followup.send(
-                    embed=simple_embed(f"{INFO_EMOJI} Added to queue: **{title}**")
+                queue.add(source, (title, thumbnail))
+                await interaction.channel.send(
+                    embed=simple_embed(
+                        f"{INFO_EMOJI}\n *Interaction User: {interaction.user.mention}*\n Added to queue: **{title}**",
+                        thumbnail=thumbnail
+                    )
                 )
+                await loading_message.delete()
             except Exception as e:
-                await interaction.followup.send(
-                    embed=simple_embed(f"{INFO_EMOJI} Failed to load audio: {e}"),
+                await interaction.channel.send(
+                    embed=simple_embed(f"{INFO_EMOJI}\n *Interaction User: {interaction.user.mention}*\n Failed to load audio: {e}"),
                     ephemeral=True
                 )
+                await loading_message.delete()
                 return
         else:
             added_count = 0
+            first_thumbnail = None
             for entry in entries:
                 audio_url = entry.get("url")
                 title = entry.get("title", "Unknown title")
+                thumbnail = entry.get("thumbnail")
                 await bot.change_presence(activity=discord.Activity(name=title, type=discord.ActivityType.listening))
+
+                if not first_thumbnail:
+                    first_thumbnail = thumbnail
 
                 try:
                     source = await discord.FFmpegOpusAudio.from_probe(audio_url, method='fallback')
-                    queue.add(source, title)
+                    queue.add(source, (title, thumbnail))
                     added_count += 1
                 except Exception:
                     continue
-            await interaction.followup.send(
-                embed=simple_embed(f"{INFO_EMOJI} Added playlist to queue! ({added_count} tracks)")
+            await interaction.channel.send(
+                embed=simple_embed(
+                    f"{INFO_EMOJI}\n *Interaction User: {interaction.user.mention}*\n Added playlist to queue! ({added_count} tracks)",
+                    thumbnail=first_thumbnail
+                )
             )
+            await loading_message.delete()
     else:
         audio_url = info.get("url")
         title = info.get("title", "Unknown title")
+        thumbnail = info.get("thumbnail")
         await bot.change_presence(activity=discord.Activity(name=title, type=discord.ActivityType.listening))
 
         try:
             source = await discord.FFmpegOpusAudio.from_probe(audio_url, method='fallback')
-            queue.add(source, title)
-            await interaction.followup.send(
-                embed=simple_embed(f"{INFO_EMOJI} Added to queue: **{title}**")
+            queue.add(source, (title, thumbnail))
+            await interaction.channel.send(
+                embed=simple_embed(
+                    f"{INFO_EMOJI}\n *Interaction User: {interaction.user.mention}*\n Added to queue: **{title}**",
+                    thumbnail=thumbnail
+                )
             )
+            await loading_message.delete()
         except Exception as e:
-            await interaction.followup.send(
-                embed=simple_embed(f"Failed to load audio: {e}"),
+            await interaction.channel.send(
+                embed=simple_embed(f"{INFO_EMOJI}\n *Interaction User: {interaction.user.mention}*\n Failed to load audio: {e}"),
                 ephemeral=True
             )
+            await loading_message.delete()
             return
 
     if not queue.playing:
         await play_next(interaction.guild, voice_client)
-        
+
 async def play_next(guild, voice_client):
     queue = guild_queues[guild.id]
     next_song = queue.get_next()
 
     if next_song:
-        source, title = next_song
+        source, (title, thumbnail) = next_song
         queue.playing = True
 
         def after_song(e):
@@ -539,11 +575,13 @@ async def play_next(guild, voice_client):
         voice_client.play(source, after=after_song)
         channel = bot.get_channel(i_channel)
         if channel:
-            await channel.send(embed=simple_embed(f"{INFO_EMOJI} Now Playing: **{title}**"))
+            await channel.send(
+                embed=simple_embed(f"{INFO_EMOJI} Now Playing: **{title}** {DANCE_EMOJI}", thumbnail=thumbnail)
+            )
     else:
         queue.playing = False
         await bot.change_presence(activity=discord.Activity(name="/help", type=discord.ActivityType.competing))
-
+        
 @bot.tree.command(name="radio", description="Play a radio stream", guild=GUILD_ID)
 @app_commands.describe(choice="Choose a Radio sender, or type in your own!")
 @app_commands.choices(choice=[
@@ -561,7 +599,6 @@ async def play_next(guild, voice_client):
     app_commands.Choice(name="ENERGY98, USA", value="http://mp3tx.duplexfx.com:8800"),
 ])
 @app_commands.describe(url="URL of the radio stream, a list: (https://wiki.ubuntuusers.de/Internetradio/Stationen/)")
-
 async def radio_command(interaction: discord.Interaction, url: str | None = None, choice: app_commands.Choice[str] | None = None):
     if interaction.user.voice is None:
         await interaction.response.send_message(
@@ -628,7 +665,7 @@ async def radio_command(interaction: discord.Interaction, url: str | None = None
 
         await bot.change_presence(activity=discord.Activity(name="Live Radio", type=discord.ActivityType.listening))
         await interaction.followup.send(
-            embed=simple_embed(f"{INFO_EMOJI} Now playing radio:\n`{stream_url}`")
+            embed=simple_embed(f"Interaction User: {interaction.user.mention}\n{INFO_EMOJI} Now playing radio:\n`{stream_url}` {DANCE_EMOJI}"),
         )
         
     except discord.ClientException as e:
@@ -654,8 +691,6 @@ async def radio_command(interaction: discord.Interaction, url: str | None = None
         )
         if voice_client and voice_client.is_connected():
             await voice_client.disconnect()
-                
-                
                 
 @bot.tree.command(name="fs", description="skips the current song!", guild=GUILD_ID)
 async def skip(interaction: discord.Interaction):
@@ -700,7 +735,6 @@ async def leave(i: discord.Interaction):
         await i.guild.voice_client.disconnect()
         await i.response.send_message(embed=simple_embed(f"Left {i.user.voice.channel}."))
         await bot.change_presence(activity=discord.Activity(name="/help", type=discord.ActivityType.competing))
-
     else:
         await i.response.send_message(embed=simple_embed(f"{INFO_EMOJI} You have to be in a VC"))
 
@@ -711,7 +745,6 @@ async def pause(interaction: discord.Interaction):
     if not voice_client or not voice_client.is_playing():
         await interaction.response.send_message(embed=simple_embed(f"{INFO_EMOJI} No song is currently playing!"), ephemeral=True)
         return
-
     if voice_client.is_paused():
         voice_client.resume()  
         await interaction.response.send_message(embed=simple_embed(f"Resumed the song! {TICKET_CREATED_EMOJI}"))
