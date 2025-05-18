@@ -1,0 +1,1107 @@
+[
+    {
+        "label": "discord",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "discord",
+        "description": "discord",
+        "detail": "discord",
+        "documentation": {}
+    },
+    {
+        "label": "app_commands",
+        "importPath": "discord",
+        "description": "discord",
+        "isExtraImport": true,
+        "detail": "discord",
+        "documentation": {}
+    },
+    {
+        "label": "app_commands",
+        "importPath": "discord",
+        "description": "discord",
+        "isExtraImport": true,
+        "detail": "discord",
+        "documentation": {}
+    },
+    {
+        "label": "app_commands",
+        "importPath": "discord",
+        "description": "discord",
+        "isExtraImport": true,
+        "detail": "discord",
+        "documentation": {}
+    },
+    {
+        "label": "app_commands",
+        "importPath": "discord",
+        "description": "discord",
+        "isExtraImport": true,
+        "detail": "discord",
+        "documentation": {}
+    },
+    {
+        "label": "Intents",
+        "importPath": "discord",
+        "description": "discord",
+        "isExtraImport": true,
+        "detail": "discord",
+        "documentation": {}
+    },
+    {
+        "label": "discord.ext",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "discord.ext",
+        "description": "discord.ext",
+        "detail": "discord.ext",
+        "documentation": {}
+    },
+    {
+        "label": "commands",
+        "importPath": "discord.ext",
+        "description": "discord.ext",
+        "isExtraImport": true,
+        "detail": "discord.ext",
+        "documentation": {}
+    },
+    {
+        "label": "commands",
+        "importPath": "discord.ext",
+        "description": "discord.ext",
+        "isExtraImport": true,
+        "detail": "discord.ext",
+        "documentation": {}
+    },
+    {
+        "label": "commands",
+        "importPath": "discord.ext",
+        "description": "discord.ext",
+        "isExtraImport": true,
+        "detail": "discord.ext",
+        "documentation": {}
+    },
+    {
+        "label": "commands",
+        "importPath": "discord.ext",
+        "description": "discord.ext",
+        "isExtraImport": true,
+        "detail": "discord.ext",
+        "documentation": {}
+    },
+    {
+        "label": "commands",
+        "importPath": "discord.ext",
+        "description": "discord.ext",
+        "isExtraImport": true,
+        "detail": "discord.ext",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "constants",
+        "description": "constants",
+        "isExtraImport": true,
+        "detail": "constants",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "constants",
+        "description": "constants",
+        "isExtraImport": true,
+        "detail": "constants",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "constants",
+        "description": "constants",
+        "isExtraImport": true,
+        "detail": "constants",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "constants",
+        "description": "constants",
+        "isExtraImport": true,
+        "detail": "constants",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "constants",
+        "description": "constants",
+        "isExtraImport": true,
+        "detail": "constants",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "constants",
+        "description": "constants",
+        "isExtraImport": true,
+        "detail": "constants",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "constants",
+        "description": "constants",
+        "isExtraImport": true,
+        "detail": "constants",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "constants",
+        "description": "constants",
+        "isExtraImport": true,
+        "detail": "constants",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "constants",
+        "description": "constants",
+        "isExtraImport": true,
+        "detail": "constants",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "views.ticketviews",
+        "description": "views.ticketviews",
+        "isExtraImport": true,
+        "detail": "views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "views.ticketviews",
+        "description": "views.ticketviews",
+        "isExtraImport": true,
+        "detail": "views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "views.ticketviews",
+        "description": "views.ticketviews",
+        "isExtraImport": true,
+        "detail": "views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "views.ticketviews",
+        "description": "views.ticketviews",
+        "isExtraImport": true,
+        "detail": "views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "views.ticketviews",
+        "description": "views.ticketviews",
+        "isExtraImport": true,
+        "detail": "views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "views.ticketviews",
+        "description": "views.ticketviews",
+        "isExtraImport": true,
+        "detail": "views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "modals.ticketmodals",
+        "description": "modals.ticketmodals",
+        "isExtraImport": true,
+        "detail": "modals.ticketmodals",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "modals.ticketmodals",
+        "description": "modals.ticketmodals",
+        "isExtraImport": true,
+        "detail": "modals.ticketmodals",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "modals.ticketmodals",
+        "description": "modals.ticketmodals",
+        "isExtraImport": true,
+        "detail": "modals.ticketmodals",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "modals.ticketmodals",
+        "description": "modals.ticketmodals",
+        "isExtraImport": true,
+        "detail": "modals.ticketmodals",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "modals.ticketmodals",
+        "description": "modals.ticketmodals",
+        "isExtraImport": true,
+        "detail": "modals.ticketmodals",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "modals.ticketmodals",
+        "description": "modals.ticketmodals",
+        "isExtraImport": true,
+        "detail": "modals.ticketmodals",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "util.ticket_creator",
+        "description": "util.ticket_creator",
+        "isExtraImport": true,
+        "detail": "util.ticket_creator",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "util.ticket_creator",
+        "description": "util.ticket_creator",
+        "isExtraImport": true,
+        "detail": "util.ticket_creator",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "util.ticket_creator",
+        "description": "util.ticket_creator",
+        "isExtraImport": true,
+        "detail": "util.ticket_creator",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "util.ticket_creator",
+        "description": "util.ticket_creator",
+        "isExtraImport": true,
+        "detail": "util.ticket_creator",
+        "documentation": {}
+    },
+    {
+        "label": "yt_dlp",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "yt_dlp",
+        "description": "yt_dlp",
+        "detail": "yt_dlp",
+        "documentation": {}
+    },
+    {
+        "label": "asyncio",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "asyncio",
+        "description": "asyncio",
+        "detail": "asyncio",
+        "documentation": {}
+    },
+    {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
+        "label": "concurrent.futures",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "concurrent.futures",
+        "description": "concurrent.futures",
+        "detail": "concurrent.futures",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "util.queue",
+        "description": "util.queue",
+        "isExtraImport": true,
+        "detail": "util.queue",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "util.queue",
+        "description": "util.queue",
+        "isExtraImport": true,
+        "detail": "util.queue",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "util.queue",
+        "description": "util.queue",
+        "isExtraImport": true,
+        "detail": "util.queue",
+        "documentation": {}
+    },
+    {
+        "label": "play_next",
+        "importPath": "util.play_next",
+        "description": "util.play_next",
+        "isExtraImport": true,
+        "detail": "util.play_next",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "util.play_next",
+        "description": "util.play_next",
+        "isExtraImport": true,
+        "detail": "util.play_next",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "embeds",
+        "description": "embeds",
+        "isExtraImport": true,
+        "detail": "embeds",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "embeds",
+        "description": "embeds",
+        "isExtraImport": true,
+        "detail": "embeds",
+        "documentation": {}
+    },
+    {
+        "label": "aiohttp",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "aiohttp",
+        "description": "aiohttp",
+        "detail": "aiohttp",
+        "documentation": {}
+    },
+    {
+        "label": "Modal",
+        "importPath": "discord.ui",
+        "description": "discord.ui",
+        "isExtraImport": true,
+        "detail": "discord.ui",
+        "documentation": {}
+    },
+    {
+        "label": "TextInput",
+        "importPath": "discord.ui",
+        "description": "discord.ui",
+        "isExtraImport": true,
+        "detail": "discord.ui",
+        "documentation": {}
+    },
+    {
+        "label": "View",
+        "importPath": "discord.ui",
+        "description": "discord.ui",
+        "isExtraImport": true,
+        "detail": "discord.ui",
+        "documentation": {}
+    },
+    {
+        "label": "Button",
+        "importPath": "discord.ui",
+        "description": "discord.ui",
+        "isExtraImport": true,
+        "detail": "discord.ui",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "util.transcript",
+        "description": "util.transcript",
+        "isExtraImport": true,
+        "detail": "util.transcript",
+        "documentation": {}
+    },
+    {
+        "label": "TYPE_CHECKING",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "TYPE_CHECKING",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "TYPE_CHECKING",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "deque",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "dotenv_values",
+        "importPath": "dotenv",
+        "description": "dotenv",
+        "isExtraImport": true,
+        "detail": "dotenv",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "TicketCog",
+        "importPath": "cogs.tickets",
+        "description": "cogs.tickets",
+        "isExtraImport": true,
+        "detail": "cogs.tickets",
+        "documentation": {}
+    },
+    {
+        "label": "GithubCog",
+        "importPath": "cogs.github",
+        "description": "cogs.github",
+        "isExtraImport": true,
+        "detail": "cogs.github",
+        "documentation": {}
+    },
+    {
+        "label": "MusicCog",
+        "importPath": "cogs.music",
+        "description": "cogs.music",
+        "isExtraImport": true,
+        "detail": "cogs.music",
+        "documentation": {}
+    },
+    {
+        "label": "RadioCog",
+        "importPath": "cogs.radio",
+        "description": "cogs.radio",
+        "isExtraImport": true,
+        "detail": "cogs.radio",
+        "documentation": {}
+    },
+    {
+        "label": "GithubCog",
+        "kind": 6,
+        "importPath": "src.cogs.github",
+        "description": "src.cogs.github",
+        "peekOfCode": "class GithubCog(commands.Cog):\n    def __init__(self, bot):\n        self.bot = bot\n    @app_commands.command(name=\"github\", description=\"Github of this bot\")\n    async def github(self, interaction: discord.Interaction):\n        embed = discord.Embed(\n            title=\"Github Repository\",\n            description=\"The github repo of the bot: [github.com/nino749/JabUB](https://github.com/nino749/JabUB)\",\n            color=0x00ff00\n        )",
+        "detail": "src.cogs.github",
+        "documentation": {}
+    },
+    {
+        "label": "MusicCog",
+        "kind": 6,
+        "importPath": "src.cogs.music",
+        "description": "src.cogs.music",
+        "peekOfCode": "class MusicCog(commands.Cog):\n    def __init__(self, bot):\n        self.bot = bot\n    @app_commands.command(name=\"play\", description=\"Plays music\")\n    @app_commands.describe(song=\"URL or search term\")\n    async def play(self, interaction: discord.Interaction, song: str):\n        await interaction.response.defer()\n        loading_message = await interaction.followup.send(\n            embed=simple_embed(f\"{LOADING_EMOJI} Loading songs, started: <t:{int(discord.utils.utcnow().timestamp())}:R>\")\n        )",
+        "detail": "src.cogs.music",
+        "documentation": {}
+    },
+    {
+        "label": "guild_queues",
+        "kind": 5,
+        "importPath": "src.cogs.music",
+        "description": "src.cogs.music",
+        "peekOfCode": "guild_queues = {}\nclass MusicCog(commands.Cog):\n    def __init__(self, bot):\n        self.bot = bot\n    @app_commands.command(name=\"play\", description=\"Plays music\")\n    @app_commands.describe(song=\"URL or search term\")\n    async def play(self, interaction: discord.Interaction, song: str):\n        await interaction.response.defer()\n        loading_message = await interaction.followup.send(\n            embed=simple_embed(f\"{LOADING_EMOJI} Loading songs, started: <t:{int(discord.utils.utcnow().timestamp())}:R>\")",
+        "detail": "src.cogs.music",
+        "documentation": {}
+    },
+    {
+        "label": "RadioCog",
+        "kind": 6,
+        "importPath": "src.cogs.radio",
+        "description": "src.cogs.radio",
+        "peekOfCode": "class RadioCog(commands.Cog):\n    def __init__(self, bot):\n        self.bot = bot\n    @app_commands.command(name=\"radio\", description=\"Play a radio stream\")\n    @app_commands.describe(choice=\"Choose a Radio sender, or type in your own!\")\n    @app_commands.choices(choice=[\n        app_commands.Choice(name=\"Charts, WW\", value=\"http://streams.bigfm.de/bigfm-charts-128-aac?usid=0-0-H-A-D-30\"),\n        app_commands.Choice(name=\"DLF, Ger\", value=\"https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3?aggregator=web\"),\n        app_commands.Choice(name=\"NDR, Ger\", value=\"http://icecast.ndr.de/ndr/ndr1radiomv/rostock/mp3/128/stream.mp3 \"),\n        app_commands.Choice(name=\"RBB, Ger\", value=\"http://antennebrandenburg.de/livemp3\"),",
+        "detail": "src.cogs.radio",
+        "documentation": {}
+    },
+    {
+        "label": "TicketCog",
+        "kind": 6,
+        "importPath": "src.cogs.tickets",
+        "description": "src.cogs.tickets",
+        "peekOfCode": "class TicketCog(commands.Cog):\n    def __init__(self, bot):\n        self.bot = bot\n    @app_commands.command(name=\"tickets-setup\", description=\"Setup tickets in this channel!\")\n    async def setup(self, interaction: discord.Interaction):\n        if not interaction.user.guild_permissions.administrator:\n            await interaction.response.send_message(NO_PERMISSION, ephemeral=True)\n            return\n        await interaction.response.send_message(\"Embed wurde gesendet\", ephemeral=True)\n        embed = discord.Embed(",
+        "detail": "src.cogs.tickets",
+        "documentation": {}
+    },
+    {
+        "label": "SEND_TICKET_FEEDBACK",
+        "kind": 5,
+        "importPath": "src.cogs.tickets",
+        "description": "src.cogs.tickets",
+        "peekOfCode": "SEND_TICKET_FEEDBACK = True # Set to True to send feedback to users when their ticket is closed\n#---------------------------------------------------------------------------------------------#\nclass TicketCog(commands.Cog):\n    def __init__(self, bot):\n        self.bot = bot\n    @app_commands.command(name=\"tickets-setup\", description=\"Setup tickets in this channel!\")\n    async def setup(self, interaction: discord.Interaction):\n        if not interaction.user.guild_permissions.administrator:\n            await interaction.response.send_message(NO_PERMISSION, ephemeral=True)\n            return",
+        "detail": "src.cogs.tickets",
+        "documentation": {}
+    },
+    {
+        "label": "ThreadModalRename",
+        "kind": 6,
+        "importPath": "src.modals.ticketmodals",
+        "description": "src.modals.ticketmodals",
+        "peekOfCode": "class ThreadModalRename(Modal, title='Archiviere das Ticket'):\n    name_TextInput = TextInput(label=\"Soll das Ticket einen anderen Namen haben?\", placeholder=\"Der neue Name des Tickets\", max_length=30, required=False)\n    async def on_submit(self, interaction: discord.Interaction):\n        new_name = self.name_TextInput.value\n        try:\n            await interaction.response.defer()\n            await interaction.channel.edit(name=new_name, archived=True)\n        except discord.HTTPException as e:\n            await interaction.response.send_message(f\"Fehler beim Archivieren des Tickets: {e}\", ephemeral=True)\n# Get a summary of the ticket after transcripting it",
+        "detail": "src.modals.ticketmodals",
+        "documentation": {}
+    },
+    {
+        "label": "TransDesc",
+        "kind": 6,
+        "importPath": "src.modals.ticketmodals",
+        "description": "src.modals.ticketmodals",
+        "peekOfCode": "class TransDesc(Modal, title=\"Beschreibung des Tickets\"):\n    name_TextInput = TextInput(label=\"Beschreibung des Tickets\", placeholder=\"\", required=False)\n    async def on_submit(self, interaction: discord.Interaction):\n        summary = self.name_TextInput.value\n        try:\n            await trans_ticket(interaction=interaction, summary=summary)\n        except discord.HTTPException as e:\n            await interaction.response.send_message(f\"Fehler beim ändern der Beschreibung: {e}\", ephemeral=True)\n            pass\n# Get a reason to close the ticket",
+        "detail": "src.modals.ticketmodals",
+        "documentation": {}
+    },
+    {
+        "label": "closeThreadReasonModal",
+        "kind": 6,
+        "importPath": "src.modals.ticketmodals",
+        "description": "src.modals.ticketmodals",
+        "peekOfCode": "class closeThreadReasonModal(Modal):\n    reason_TextInput = TextInput(label=\"Grund\", placeholder=\"Gib den Grund für das Schließen des Tickets an.\", style=discord.TextStyle.short, max_length=200)\n    def __init__(self, ticketcog: \"TicketCog\"):\n        super().__init__(title='Ticket schließen')\n        self.ticketcog = ticketcog\n    async def on_submit(self, interaction: discord.Interaction):\n        await interaction.response.defer()\n        reason = self.reason_TextInput.value\n        await self.ticketcog.close_thread_with_reason(interaction, reason)\n# Area saving modal, to get the world and coordinates",
+        "detail": "src.modals.ticketmodals",
+        "documentation": {}
+    },
+    {
+        "label": "bereichModal",
+        "kind": 6,
+        "importPath": "src.modals.ticketmodals",
+        "description": "src.modals.ticketmodals",
+        "peekOfCode": "class bereichModal(Modal):\n    def __init__(self):\n        super().__init__(title='Bereich Sichern')\n        self.welt = discord.ui.TextInput(label=\"Welt\", placeholder=\"Die Welt, e.g. Overworld, Nether, End\", style=discord.TextStyle.short, max_length=60)\n        self.koordinaten = discord.ui.TextInput(label=\"Koordinaten\", placeholder=\"120 60 120 bis 200 70 200\")\n        self.add_item(self.welt)\n        self.add_item(self.koordinaten)\n# get the coordinates of the plot\nclass parzelleModal(Modal):\n    def __init__(self, ticketcog: \"TicketCog\"):",
+        "detail": "src.modals.ticketmodals",
+        "documentation": {}
+    },
+    {
+        "label": "parzelleModal",
+        "kind": 6,
+        "importPath": "src.modals.ticketmodals",
+        "description": "src.modals.ticketmodals",
+        "peekOfCode": "class parzelleModal(Modal):\n    def __init__(self, ticketcog: \"TicketCog\"):\n        super().__init__(title='Parzelle übertragen')\n        self.ticketcog = ticketcog\n        self.ingame_name = discord.ui.TextInput(label=\"Ingame Name\", placeholder=\"Der Name deines Minecraft Accounts\", style=discord.TextStyle.short, max_length=60)\n        self.canstein_name = discord.ui.TextInput(label=\"Canstein Name\", placeholder=\"Der Name des benutzten Canstein Accounts\", style=discord.TextStyle.short, max_length=60, required=False)\n        self.add_item(self.ingame_name)\n        self.add_item(self.canstein_name)\n    async def on_submit(self, interaction: discord.Interaction):\n        fields = {",
+        "detail": "src.modals.ticketmodals",
+        "documentation": {}
+    },
+    {
+        "label": "Queue",
+        "kind": 6,
+        "importPath": "src.util.queue",
+        "description": "src.util.queue",
+        "peekOfCode": "class Queue:\n    def __init__(self):\n        self.queue = deque()\n        self.playing = False\n    def add(self, source, meta):\n        self.queue.append((source, meta))\n    def get_next(self):\n        return self.queue.popleft() if self.queue else None\n    def is_empty(self):\n        return len(self.queue) == 0",
+        "detail": "src.util.queue",
+        "documentation": {}
+    },
+    {
+        "label": "load_ticket_creator_data",
+        "kind": 2,
+        "importPath": "src.util.ticket_creator",
+        "description": "src.util.ticket_creator",
+        "peekOfCode": "def load_ticket_creator_data() -> dict:\n    if not os.path.exists(TICKET_CREATOR_FILE):\n        return {}\n    try:\n        with open(TICKET_CREATOR_FILE, \"r\") as f:\n            return json.load(f)\n    except (json.JSONDecodeError, IOError):\n        return {}\ndef save_ticket_creator_data(data: dict):\n    with open(TICKET_CREATOR_FILE, \"w\") as f:",
+        "detail": "src.util.ticket_creator",
+        "documentation": {}
+    },
+    {
+        "label": "save_ticket_creator_data",
+        "kind": 2,
+        "importPath": "src.util.ticket_creator",
+        "description": "src.util.ticket_creator",
+        "peekOfCode": "def save_ticket_creator_data(data: dict):\n    with open(TICKET_CREATOR_FILE, \"w\") as f:\n        json.dump(data, f, indent=4)\ndef get_ticket_creator(guild_id: int) -> int | None:\n    data = load_ticket_creator_data()\n    return data.get(str(guild_id))\ndef save_ticket_creator(thread_id: int, user_id: int):\n    data = load_ticket_creator_data()\n    data[str(thread_id)] = user_id\n    save_ticket_creator_data(data)",
+        "detail": "src.util.ticket_creator",
+        "documentation": {}
+    },
+    {
+        "label": "get_ticket_creator",
+        "kind": 2,
+        "importPath": "src.util.ticket_creator",
+        "description": "src.util.ticket_creator",
+        "peekOfCode": "def get_ticket_creator(guild_id: int) -> int | None:\n    data = load_ticket_creator_data()\n    return data.get(str(guild_id))\ndef save_ticket_creator(thread_id: int, user_id: int):\n    data = load_ticket_creator_data()\n    data[str(thread_id)] = user_id\n    save_ticket_creator_data(data)\ndef delete_ticket_creator(thread_id: int):\n    data = load_ticket_creator_data()\n    if str(thread_id) in data:",
+        "detail": "src.util.ticket_creator",
+        "documentation": {}
+    },
+    {
+        "label": "save_ticket_creator",
+        "kind": 2,
+        "importPath": "src.util.ticket_creator",
+        "description": "src.util.ticket_creator",
+        "peekOfCode": "def save_ticket_creator(thread_id: int, user_id: int):\n    data = load_ticket_creator_data()\n    data[str(thread_id)] = user_id\n    save_ticket_creator_data(data)\ndef delete_ticket_creator(thread_id: int):\n    data = load_ticket_creator_data()\n    if str(thread_id) in data:\n        del data[str(thread_id)]\n        save_ticket_creator_data(data)\nasync def get_ticket_users(thread: discord.Thread):",
+        "detail": "src.util.ticket_creator",
+        "documentation": {}
+    },
+    {
+        "label": "delete_ticket_creator",
+        "kind": 2,
+        "importPath": "src.util.ticket_creator",
+        "description": "src.util.ticket_creator",
+        "peekOfCode": "def delete_ticket_creator(thread_id: int):\n    data = load_ticket_creator_data()\n    if str(thread_id) in data:\n        del data[str(thread_id)]\n        save_ticket_creator_data(data)\nasync def get_ticket_users(thread: discord.Thread):\n    user_ids = set()\n    users = []\n    async for message in thread.history(limit=None):\n        if message.author.id not in user_ids:",
+        "detail": "src.util.ticket_creator",
+        "documentation": {}
+    },
+    {
+        "label": "PersistentCloseView",
+        "kind": 6,
+        "importPath": "src.views.ticketviews",
+        "description": "src.views.ticketviews",
+        "peekOfCode": "class PersistentCloseView(View):\n    def __init__(self, ticketcog: \"TicketCog\"):\n        super().__init__(timeout=None)\n        self.ticketcog = ticketcog\n        close_btn = Button(label=\"Ticket schließen\", style=DANGER, emoji=LOCK_EMOJI, custom_id=\"close_ticket_button\")\n        close_btn.callback = self.close_button\n        close_reason_btn = Button(label=\"Ticket mit Grund schließen\", style=DANGER, emoji=LOCK_W_REASON_EMOJI, custom_id=\"close_ticket_button_reason\")\n        close_reason_btn.callback = self.close_button_with_reason\n        self.add_item(close_btn)\n        self.add_item(close_reason_btn)",
+        "detail": "src.views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "CloseThreadView",
+        "kind": 6,
+        "importPath": "src.views.ticketviews",
+        "description": "src.views.ticketviews",
+        "peekOfCode": "class CloseThreadView(View):\n    def __init__(self, *, timeout = 180, ticketcog: \"TicketCog\"):\n        super().__init__(timeout=timeout)\n        self.ticketcog = ticketcog\n        archive_button = Button(emoji=ARCHIVE_EMOJI, style=SECONDARY)\n        archive_button.callback = self.archive_button\n        delete_button = Button(emoji=TRASHCAN_EMOJI, style=DANGER)\n        delete_button.callback = self.delete_button\n        trans_button = Button(emoji=TRANSCRIPT_EMOJI, style=SECONDARY)\n        trans_button.callback = self.trans_button",
+        "detail": "src.views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "CloseConfirmView",
+        "kind": 6,
+        "importPath": "src.views.ticketviews",
+        "description": "src.views.ticketviews",
+        "peekOfCode": "class CloseConfirmView(View):\n    def __init__(self, *, timeout = 180, ticketcog: \"TicketCog\"):\n        super().__init__(timeout=timeout)\n        self.ticketcog = ticketcog\n        yes_button = Button(emoji=CHECK, style=DANGER, label=\"Ja, schließen\")\n        yes_button.callback = self.yes_button\n        no_button = Button(emoji=UNCHECK, style=SECONDARY, label=\"Nein\")\n        no_button.callback = self.no_button\n        self.add_item(yes_button)\n        self.add_item(no_button)",
+        "detail": "src.views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "TicketSetupView",
+        "kind": 6,
+        "importPath": "src.views.ticketviews",
+        "description": "src.views.ticketviews",
+        "peekOfCode": "class TicketSetupView(View):\n    def __init__(self):\n        super().__init__(timeout=None)\n        self.add_item(TicketDropdown())\n# The ticket-setup view dropdown\nclass TicketDropdown(discord.ui.Select):\n    options = [\n        discord.SelectOption(label=\"Allgemein: Discord\", emoji=\"💬\", value=\"discord\"),\n        discord.SelectOption(label=\"Allgemein: Minecraft\", emoji=\"⛏️\", value=\"minecraft\"),\n        discord.SelectOption(label=\"Survival: Bereich sichern\", emoji=\"🚧\", value=\"bereich\"),",
+        "detail": "src.views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "TicketDropdown",
+        "kind": 6,
+        "importPath": "src.views.ticketviews",
+        "description": "src.views.ticketviews",
+        "peekOfCode": "class TicketDropdown(discord.ui.Select):\n    options = [\n        discord.SelectOption(label=\"Allgemein: Discord\", emoji=\"💬\", value=\"discord\"),\n        discord.SelectOption(label=\"Allgemein: Minecraft\", emoji=\"⛏️\", value=\"minecraft\"),\n        discord.SelectOption(label=\"Survival: Bereich sichern\", emoji=\"🚧\", value=\"bereich\"),\n        discord.SelectOption(label=\"Kreativ: Parzelle übertragen\", emoji=\"🛠️\", value=\"parzelle\"),\n        #discord.SelectOption(label=\"Bewerbung\", emoji=\"🪪\", value=\"bewerbung\"),\n        discord.SelectOption(label=\"Entbannungsantrag\", emoji=\"📝\", value=\"entbannung\"),\n        discord.SelectOption(label=\"Sonstiges\", emoji=\"❓\", value=\"sonstiges\")\n    ]",
+        "detail": "src.views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "DeleteConfirmView",
+        "kind": 6,
+        "importPath": "src.views.ticketviews",
+        "description": "src.views.ticketviews",
+        "peekOfCode": "class DeleteConfirmView(View):\n    def __init__(self, *, timeout = 180, ticketcog: \"TicketCog\"):\n        super().__init__(timeout=timeout)\n        self.ticketcog = ticketcog\n        yes_button = Button(emoji=CHECK, style=DANGER, label=\"Ja, löschen\")\n        yes_button.callback = self.yes_button\n        no_button = Button(emoji=UNCHECK, style=SECONDARY, label=\"Nein\")\n        no_button.callback = self.no_button\n    async def yes_button(self, interaction: discord.Interaction):\n        self.ticketcog.delete_ticket_creator(interaction.channel.id)",
+        "detail": "src.views.ticketviews",
+        "documentation": {}
+    },
+    {
+        "label": "_config",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "_config = dotenv_values(\".env\")\nTICKET_CHANNEL_ID = _config.get(\"TICKET_CHANNEL_ID\")\nTOKEN = _config.get('DISCORD_TOKEN')\nSYNC_SERVER = _config.get('SERVER')\ni_channel = _config.get('I_CHANNEL')\nTRANS_CHANNEL_ID = _config.get('TRANS_CHANNEL')\nTEAM_ROLE = _config.get('TEAM_ROLE')\nSUPPORT_ROLE_NAME = _config.get('SUPPORT_ROLE_NAME')\nSUPPORTHILFE_ROLE_NAME = _config.get('SUPPORTHILFE_ROLE_NAME')\nTICKET_CREATOR_FILE = \"config/tickets.json\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "TICKET_CHANNEL_ID",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "TICKET_CHANNEL_ID = _config.get(\"TICKET_CHANNEL_ID\")\nTOKEN = _config.get('DISCORD_TOKEN')\nSYNC_SERVER = _config.get('SERVER')\ni_channel = _config.get('I_CHANNEL')\nTRANS_CHANNEL_ID = _config.get('TRANS_CHANNEL')\nTEAM_ROLE = _config.get('TEAM_ROLE')\nSUPPORT_ROLE_NAME = _config.get('SUPPORT_ROLE_NAME')\nSUPPORTHILFE_ROLE_NAME = _config.get('SUPPORTHILFE_ROLE_NAME')\nTICKET_CREATOR_FILE = \"config/tickets.json\"\n# Emojis for the bot",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "TOKEN",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "TOKEN = _config.get('DISCORD_TOKEN')\nSYNC_SERVER = _config.get('SERVER')\ni_channel = _config.get('I_CHANNEL')\nTRANS_CHANNEL_ID = _config.get('TRANS_CHANNEL')\nTEAM_ROLE = _config.get('TEAM_ROLE')\nSUPPORT_ROLE_NAME = _config.get('SUPPORT_ROLE_NAME')\nSUPPORTHILFE_ROLE_NAME = _config.get('SUPPORTHILFE_ROLE_NAME')\nTICKET_CREATOR_FILE = \"config/tickets.json\"\n# Emojis for the bot\nCHECK = \"<:check:1368203772123283506>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "SYNC_SERVER",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "SYNC_SERVER = _config.get('SERVER')\ni_channel = _config.get('I_CHANNEL')\nTRANS_CHANNEL_ID = _config.get('TRANS_CHANNEL')\nTEAM_ROLE = _config.get('TEAM_ROLE')\nSUPPORT_ROLE_NAME = _config.get('SUPPORT_ROLE_NAME')\nSUPPORTHILFE_ROLE_NAME = _config.get('SUPPORTHILFE_ROLE_NAME')\nTICKET_CREATOR_FILE = \"config/tickets.json\"\n# Emojis for the bot\nCHECK = \"<:check:1368203772123283506>\"\nUNCHECK = \"<:X_:1373405777297014944>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "i_channel",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "i_channel = _config.get('I_CHANNEL')\nTRANS_CHANNEL_ID = _config.get('TRANS_CHANNEL')\nTEAM_ROLE = _config.get('TEAM_ROLE')\nSUPPORT_ROLE_NAME = _config.get('SUPPORT_ROLE_NAME')\nSUPPORTHILFE_ROLE_NAME = _config.get('SUPPORTHILFE_ROLE_NAME')\nTICKET_CREATOR_FILE = \"config/tickets.json\"\n# Emojis for the bot\nCHECK = \"<:check:1368203772123283506>\"\nUNCHECK = \"<:X_:1373405777297014944>\"\nLOCK_EMOJI = \"<:lock:1368203397467082823>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "TRANS_CHANNEL_ID",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "TRANS_CHANNEL_ID = _config.get('TRANS_CHANNEL')\nTEAM_ROLE = _config.get('TEAM_ROLE')\nSUPPORT_ROLE_NAME = _config.get('SUPPORT_ROLE_NAME')\nSUPPORTHILFE_ROLE_NAME = _config.get('SUPPORTHILFE_ROLE_NAME')\nTICKET_CREATOR_FILE = \"config/tickets.json\"\n# Emojis for the bot\nCHECK = \"<:check:1368203772123283506>\"\nUNCHECK = \"<:X_:1373405777297014944>\"\nLOCK_EMOJI = \"<:lock:1368203397467082823>\"\nTRASHCAN_EMOJI = \"<:bin:1368203374092353627>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "TEAM_ROLE",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "TEAM_ROLE = _config.get('TEAM_ROLE')\nSUPPORT_ROLE_NAME = _config.get('SUPPORT_ROLE_NAME')\nSUPPORTHILFE_ROLE_NAME = _config.get('SUPPORTHILFE_ROLE_NAME')\nTICKET_CREATOR_FILE = \"config/tickets.json\"\n# Emojis for the bot\nCHECK = \"<:check:1368203772123283506>\"\nUNCHECK = \"<:X_:1373405777297014944>\"\nLOCK_EMOJI = \"<:lock:1368203397467082823>\"\nTRASHCAN_EMOJI = \"<:bin:1368203374092353627>\"\nARCHIVE_EMOJI = \"<:save:1368203337337540648>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "SUPPORT_ROLE_NAME",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "SUPPORT_ROLE_NAME = _config.get('SUPPORT_ROLE_NAME')\nSUPPORTHILFE_ROLE_NAME = _config.get('SUPPORTHILFE_ROLE_NAME')\nTICKET_CREATOR_FILE = \"config/tickets.json\"\n# Emojis for the bot\nCHECK = \"<:check:1368203772123283506>\"\nUNCHECK = \"<:X_:1373405777297014944>\"\nLOCK_EMOJI = \"<:lock:1368203397467082823>\"\nTRASHCAN_EMOJI = \"<:bin:1368203374092353627>\"\nARCHIVE_EMOJI = \"<:save:1368203337337540648>\"\nDELETE_EMOJI = \"<:bin:1368203374092353627>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "SUPPORTHILFE_ROLE_NAME",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "SUPPORTHILFE_ROLE_NAME = _config.get('SUPPORTHILFE_ROLE_NAME')\nTICKET_CREATOR_FILE = \"config/tickets.json\"\n# Emojis for the bot\nCHECK = \"<:check:1368203772123283506>\"\nUNCHECK = \"<:X_:1373405777297014944>\"\nLOCK_EMOJI = \"<:lock:1368203397467082823>\"\nTRASHCAN_EMOJI = \"<:bin:1368203374092353627>\"\nARCHIVE_EMOJI = \"<:save:1368203337337540648>\"\nDELETE_EMOJI = \"<:bin:1368203374092353627>\"\nTICKET_OPEN_EMOJI = \"<:creation:1368203348066439190>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "TICKET_CREATOR_FILE",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "TICKET_CREATOR_FILE = \"config/tickets.json\"\n# Emojis for the bot\nCHECK = \"<:check:1368203772123283506>\"\nUNCHECK = \"<:X_:1373405777297014944>\"\nLOCK_EMOJI = \"<:lock:1368203397467082823>\"\nTRASHCAN_EMOJI = \"<:bin:1368203374092353627>\"\nARCHIVE_EMOJI = \"<:save:1368203337337540648>\"\nDELETE_EMOJI = \"<:bin:1368203374092353627>\"\nTICKET_OPEN_EMOJI = \"<:creation:1368203348066439190>\"\nTRANSCRIPT_EMOJI = \"<:transcript:1368207338162491513>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "CHECK",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "CHECK = \"<:check:1368203772123283506>\"\nUNCHECK = \"<:X_:1373405777297014944>\"\nLOCK_EMOJI = \"<:lock:1368203397467082823>\"\nTRASHCAN_EMOJI = \"<:bin:1368203374092353627>\"\nARCHIVE_EMOJI = \"<:save:1368203337337540648>\"\nDELETE_EMOJI = \"<:bin:1368203374092353627>\"\nTICKET_OPEN_EMOJI = \"<:creation:1368203348066439190>\"\nTRANSCRIPT_EMOJI = \"<:transcript:1368207338162491513>\"\nREOPEN_EMOJI = \"<:unlock:1368203388231094373>\"\nINFO_EMOJI = \"<:info:1370443515342884936>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "UNCHECK",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "UNCHECK = \"<:X_:1373405777297014944>\"\nLOCK_EMOJI = \"<:lock:1368203397467082823>\"\nTRASHCAN_EMOJI = \"<:bin:1368203374092353627>\"\nARCHIVE_EMOJI = \"<:save:1368203337337540648>\"\nDELETE_EMOJI = \"<:bin:1368203374092353627>\"\nTICKET_OPEN_EMOJI = \"<:creation:1368203348066439190>\"\nTRANSCRIPT_EMOJI = \"<:transcript:1368207338162491513>\"\nREOPEN_EMOJI = \"<:unlock:1368203388231094373>\"\nINFO_EMOJI = \"<:info:1370443515342884936>\"\nLOADING_EMOJI = \"<a:2923printsdark:1367119727763259533>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "LOCK_EMOJI",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "LOCK_EMOJI = \"<:lock:1368203397467082823>\"\nTRASHCAN_EMOJI = \"<:bin:1368203374092353627>\"\nARCHIVE_EMOJI = \"<:save:1368203337337540648>\"\nDELETE_EMOJI = \"<:bin:1368203374092353627>\"\nTICKET_OPEN_EMOJI = \"<:creation:1368203348066439190>\"\nTRANSCRIPT_EMOJI = \"<:transcript:1368207338162491513>\"\nREOPEN_EMOJI = \"<:unlock:1368203388231094373>\"\nINFO_EMOJI = \"<:info:1370443515342884936>\"\nLOADING_EMOJI = \"<a:2923printsdark:1367119727763259533>\"\nDANCE_EMOJI = \"<a:dance:1369716119073587290>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "TRASHCAN_EMOJI",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "TRASHCAN_EMOJI = \"<:bin:1368203374092353627>\"\nARCHIVE_EMOJI = \"<:save:1368203337337540648>\"\nDELETE_EMOJI = \"<:bin:1368203374092353627>\"\nTICKET_OPEN_EMOJI = \"<:creation:1368203348066439190>\"\nTRANSCRIPT_EMOJI = \"<:transcript:1368207338162491513>\"\nREOPEN_EMOJI = \"<:unlock:1368203388231094373>\"\nINFO_EMOJI = \"<:info:1370443515342884936>\"\nLOADING_EMOJI = \"<a:2923printsdark:1367119727763259533>\"\nDANCE_EMOJI = \"<a:dance:1369716119073587290>\"\nLOCK_W_REASON_EMOJI = \"<:lock_with_reason:1371107805867671643>\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "ARCHIVE_EMOJI",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "ARCHIVE_EMOJI = \"<:save:1368203337337540648>\"\nDELETE_EMOJI = \"<:bin:1368203374092353627>\"\nTICKET_OPEN_EMOJI = \"<:creation:1368203348066439190>\"\nTRANSCRIPT_EMOJI = \"<:transcript:1368207338162491513>\"\nREOPEN_EMOJI = \"<:unlock:1368203388231094373>\"\nINFO_EMOJI = \"<:info:1370443515342884936>\"\nLOADING_EMOJI = \"<a:2923printsdark:1367119727763259533>\"\nDANCE_EMOJI = \"<a:dance:1369716119073587290>\"\nLOCK_W_REASON_EMOJI = \"<:lock_with_reason:1371107805867671643>\"\n# Button Styles",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "DELETE_EMOJI",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "DELETE_EMOJI = \"<:bin:1368203374092353627>\"\nTICKET_OPEN_EMOJI = \"<:creation:1368203348066439190>\"\nTRANSCRIPT_EMOJI = \"<:transcript:1368207338162491513>\"\nREOPEN_EMOJI = \"<:unlock:1368203388231094373>\"\nINFO_EMOJI = \"<:info:1370443515342884936>\"\nLOADING_EMOJI = \"<a:2923printsdark:1367119727763259533>\"\nDANCE_EMOJI = \"<a:dance:1369716119073587290>\"\nLOCK_W_REASON_EMOJI = \"<:lock_with_reason:1371107805867671643>\"\n# Button Styles\nDANGER = discord.ButtonStyle.danger",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "TICKET_OPEN_EMOJI",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "TICKET_OPEN_EMOJI = \"<:creation:1368203348066439190>\"\nTRANSCRIPT_EMOJI = \"<:transcript:1368207338162491513>\"\nREOPEN_EMOJI = \"<:unlock:1368203388231094373>\"\nINFO_EMOJI = \"<:info:1370443515342884936>\"\nLOADING_EMOJI = \"<a:2923printsdark:1367119727763259533>\"\nDANCE_EMOJI = \"<a:dance:1369716119073587290>\"\nLOCK_W_REASON_EMOJI = \"<:lock_with_reason:1371107805867671643>\"\n# Button Styles\nDANGER = discord.ButtonStyle.danger\nSECONDARY = discord.ButtonStyle.secondary",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "TRANSCRIPT_EMOJI",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "TRANSCRIPT_EMOJI = \"<:transcript:1368207338162491513>\"\nREOPEN_EMOJI = \"<:unlock:1368203388231094373>\"\nINFO_EMOJI = \"<:info:1370443515342884936>\"\nLOADING_EMOJI = \"<a:2923printsdark:1367119727763259533>\"\nDANCE_EMOJI = \"<a:dance:1369716119073587290>\"\nLOCK_W_REASON_EMOJI = \"<:lock_with_reason:1371107805867671643>\"\n# Button Styles\nDANGER = discord.ButtonStyle.danger\nSECONDARY = discord.ButtonStyle.secondary\nGREEN = discord.ButtonStyle.green",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "REOPEN_EMOJI",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "REOPEN_EMOJI = \"<:unlock:1368203388231094373>\"\nINFO_EMOJI = \"<:info:1370443515342884936>\"\nLOADING_EMOJI = \"<a:2923printsdark:1367119727763259533>\"\nDANCE_EMOJI = \"<a:dance:1369716119073587290>\"\nLOCK_W_REASON_EMOJI = \"<:lock_with_reason:1371107805867671643>\"\n# Button Styles\nDANGER = discord.ButtonStyle.danger\nSECONDARY = discord.ButtonStyle.secondary\nGREEN = discord.ButtonStyle.green\n# YT_OPTS",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "INFO_EMOJI",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "INFO_EMOJI = \"<:info:1370443515342884936>\"\nLOADING_EMOJI = \"<a:2923printsdark:1367119727763259533>\"\nDANCE_EMOJI = \"<a:dance:1369716119073587290>\"\nLOCK_W_REASON_EMOJI = \"<:lock_with_reason:1371107805867671643>\"\n# Button Styles\nDANGER = discord.ButtonStyle.danger\nSECONDARY = discord.ButtonStyle.secondary\nGREEN = discord.ButtonStyle.green\n# YT_OPTS\nYT_OPTS = {",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "LOADING_EMOJI",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "LOADING_EMOJI = \"<a:2923printsdark:1367119727763259533>\"\nDANCE_EMOJI = \"<a:dance:1369716119073587290>\"\nLOCK_W_REASON_EMOJI = \"<:lock_with_reason:1371107805867671643>\"\n# Button Styles\nDANGER = discord.ButtonStyle.danger\nSECONDARY = discord.ButtonStyle.secondary\nGREEN = discord.ButtonStyle.green\n# YT_OPTS\nYT_OPTS = {\n    'format': 'bestaudio/best',",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "DANCE_EMOJI",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "DANCE_EMOJI = \"<a:dance:1369716119073587290>\"\nLOCK_W_REASON_EMOJI = \"<:lock_with_reason:1371107805867671643>\"\n# Button Styles\nDANGER = discord.ButtonStyle.danger\nSECONDARY = discord.ButtonStyle.secondary\nGREEN = discord.ButtonStyle.green\n# YT_OPTS\nYT_OPTS = {\n    'format': 'bestaudio/best',\n    'noplaylist': False,",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "LOCK_W_REASON_EMOJI",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "LOCK_W_REASON_EMOJI = \"<:lock_with_reason:1371107805867671643>\"\n# Button Styles\nDANGER = discord.ButtonStyle.danger\nSECONDARY = discord.ButtonStyle.secondary\nGREEN = discord.ButtonStyle.green\n# YT_OPTS\nYT_OPTS = {\n    'format': 'bestaudio/best',\n    'noplaylist': False,\n    'quiet': False,",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "DANGER",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "DANGER = discord.ButtonStyle.danger\nSECONDARY = discord.ButtonStyle.secondary\nGREEN = discord.ButtonStyle.green\n# YT_OPTS\nYT_OPTS = {\n    'format': 'bestaudio/best',\n    'noplaylist': False,\n    'quiet': False,\n    'include_thumbnail': True,\n    'source_address': '0.0.0.0',",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "SECONDARY",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "SECONDARY = discord.ButtonStyle.secondary\nGREEN = discord.ButtonStyle.green\n# YT_OPTS\nYT_OPTS = {\n    'format': 'bestaudio/best',\n    'noplaylist': False,\n    'quiet': False,\n    'include_thumbnail': True,\n    'source_address': '0.0.0.0',\n    'outtmpl': '-',",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "GREEN",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "GREEN = discord.ButtonStyle.green\n# YT_OPTS\nYT_OPTS = {\n    'format': 'bestaudio/best',\n    'noplaylist': False,\n    'quiet': False,\n    'include_thumbnail': True,\n    'source_address': '0.0.0.0',\n    'outtmpl': '-',\n    'postprocessors': [{",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "YT_OPTS",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "YT_OPTS = {\n    'format': 'bestaudio/best',\n    'noplaylist': False,\n    'quiet': False,\n    'include_thumbnail': True,\n    'source_address': '0.0.0.0',\n    'outtmpl': '-',\n    'postprocessors': [{\n        'key': 'FFmpegExtractAudio',\n        'preferredcodec': 'mp3',",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "NO_MEMBER",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "NO_MEMBER = \"> Fehler: Member wurde nicht gefunden.\"\nNO_PERMISSION = \"> Du hast keine Berechtigung, diese Aktion auszuführen.\"\nSAME_VC = \"> Du musst dich im selben Sprachkanal wie der Bot befinden, um diesen Befehl zu nutzen.\"\n# Embed\nEMBED_FOOTER = \"JabUB.css | by www.ninoio.gay\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "NO_PERMISSION",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "NO_PERMISSION = \"> Du hast keine Berechtigung, diese Aktion auszuführen.\"\nSAME_VC = \"> Du musst dich im selben Sprachkanal wie der Bot befinden, um diesen Befehl zu nutzen.\"\n# Embed\nEMBED_FOOTER = \"JabUB.css | by www.ninoio.gay\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "SAME_VC",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "SAME_VC = \"> Du musst dich im selben Sprachkanal wie der Bot befinden, um diesen Befehl zu nutzen.\"\n# Embed\nEMBED_FOOTER = \"JabUB.css | by www.ninoio.gay\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "EMBED_FOOTER",
+        "kind": 5,
+        "importPath": "src.constants",
+        "description": "src.constants",
+        "peekOfCode": "EMBED_FOOTER = \"JabUB.css | by www.ninoio.gay\"",
+        "detail": "src.constants",
+        "documentation": {}
+    },
+    {
+        "label": "simple_embed",
+        "kind": 2,
+        "importPath": "src.embeds",
+        "description": "src.embeds",
+        "peekOfCode": "def simple_embed(text: str, thumbnail: str | None = None, color: int = 0x00ff00):\n    embed = discord.Embed(description=text, color=color)\n    if thumbnail:\n        embed.set_thumbnail(url=thumbnail)\n    return embed",
+        "detail": "src.embeds",
+        "documentation": {}
+    },
+    {
+        "label": "Bot",
+        "kind": 6,
+        "importPath": "src.main",
+        "description": "src.main",
+        "peekOfCode": "class Bot(commands.Bot):\n    def __init__(self, *args, **kwargs):\n        super().__init__(command_prefix=\"!\", intents=intents, activity=discord.Activity(name=\"/github\", type=discord.ActivityType.competing), *args, **kwargs)\n    async def setup_hook(self):\n        # Add the cogs to the bot\n        await self.add_cog(TicketCog(self))\n        await self.add_cog(GithubCog(self))\n        await self.add_cog(MusicCog(self))\n        await self.add_cog(RadioCog(self))\n        # Add persistent views",
+        "detail": "src.main",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "src.main",
+        "description": "src.main",
+        "peekOfCode": "logger = logging.getLogger(__name__)\n# Get the guilds to sync\nGUILD_ID = discord.Object(id=SYNC_SERVER)\n# Default intents\nintents = Intents.default()\nintents.message_content = True\nintents.typing = True\nintents.presences = True\nintents.members = True\n# Define the bot",
+        "detail": "src.main",
+        "documentation": {}
+    },
+    {
+        "label": "GUILD_ID",
+        "kind": 5,
+        "importPath": "src.main",
+        "description": "src.main",
+        "peekOfCode": "GUILD_ID = discord.Object(id=SYNC_SERVER)\n# Default intents\nintents = Intents.default()\nintents.message_content = True\nintents.typing = True\nintents.presences = True\nintents.members = True\n# Define the bot\nclass Bot(commands.Bot):\n    def __init__(self, *args, **kwargs):",
+        "detail": "src.main",
+        "documentation": {}
+    },
+    {
+        "label": "intents",
+        "kind": 5,
+        "importPath": "src.main",
+        "description": "src.main",
+        "peekOfCode": "intents = Intents.default()\nintents.message_content = True\nintents.typing = True\nintents.presences = True\nintents.members = True\n# Define the bot\nclass Bot(commands.Bot):\n    def __init__(self, *args, **kwargs):\n        super().__init__(command_prefix=\"!\", intents=intents, activity=discord.Activity(name=\"/github\", type=discord.ActivityType.competing), *args, **kwargs)\n    async def setup_hook(self):",
+        "detail": "src.main",
+        "documentation": {}
+    },
+    {
+        "label": "intents.message_content",
+        "kind": 5,
+        "importPath": "src.main",
+        "description": "src.main",
+        "peekOfCode": "intents.message_content = True\nintents.typing = True\nintents.presences = True\nintents.members = True\n# Define the bot\nclass Bot(commands.Bot):\n    def __init__(self, *args, **kwargs):\n        super().__init__(command_prefix=\"!\", intents=intents, activity=discord.Activity(name=\"/github\", type=discord.ActivityType.competing), *args, **kwargs)\n    async def setup_hook(self):\n        # Add the cogs to the bot",
+        "detail": "src.main",
+        "documentation": {}
+    },
+    {
+        "label": "intents.typing",
+        "kind": 5,
+        "importPath": "src.main",
+        "description": "src.main",
+        "peekOfCode": "intents.typing = True\nintents.presences = True\nintents.members = True\n# Define the bot\nclass Bot(commands.Bot):\n    def __init__(self, *args, **kwargs):\n        super().__init__(command_prefix=\"!\", intents=intents, activity=discord.Activity(name=\"/github\", type=discord.ActivityType.competing), *args, **kwargs)\n    async def setup_hook(self):\n        # Add the cogs to the bot\n        await self.add_cog(TicketCog(self))",
+        "detail": "src.main",
+        "documentation": {}
+    },
+    {
+        "label": "intents.presences",
+        "kind": 5,
+        "importPath": "src.main",
+        "description": "src.main",
+        "peekOfCode": "intents.presences = True\nintents.members = True\n# Define the bot\nclass Bot(commands.Bot):\n    def __init__(self, *args, **kwargs):\n        super().__init__(command_prefix=\"!\", intents=intents, activity=discord.Activity(name=\"/github\", type=discord.ActivityType.competing), *args, **kwargs)\n    async def setup_hook(self):\n        # Add the cogs to the bot\n        await self.add_cog(TicketCog(self))\n        await self.add_cog(GithubCog(self))",
+        "detail": "src.main",
+        "documentation": {}
+    },
+    {
+        "label": "intents.members",
+        "kind": 5,
+        "importPath": "src.main",
+        "description": "src.main",
+        "peekOfCode": "intents.members = True\n# Define the bot\nclass Bot(commands.Bot):\n    def __init__(self, *args, **kwargs):\n        super().__init__(command_prefix=\"!\", intents=intents, activity=discord.Activity(name=\"/github\", type=discord.ActivityType.competing), *args, **kwargs)\n    async def setup_hook(self):\n        # Add the cogs to the bot\n        await self.add_cog(TicketCog(self))\n        await self.add_cog(GithubCog(self))\n        await self.add_cog(MusicCog(self))",
+        "detail": "src.main",
+        "documentation": {}
+    }
+]
