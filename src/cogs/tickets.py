@@ -30,8 +30,8 @@ class TicketCog(commands.Cog):
 
         await interaction.channel.send(embed=embed, view=TicketSetupView(interaction))
         
-    @app_commands.command(name="menu", description="Gives you the support menu!")
-    async def menu(self, interaction: discord.Interaction):
+    @app_commands.command(name="close", description="Lets you close the ticket")
+    async def close(self, interaction: discord.Interaction):
         if not isinstance(interaction.channel, discord.Thread):
             await interaction.response.send_message("Dieser Befehl kann nur in einem Ticket-Thread verwendet werden.", ephemeral=True)
             return
@@ -116,4 +116,4 @@ class TicketCog(commands.Cog):
 
     async def cog_load(self):
         self.bot.tree.add_command(self.setup, guild=discord.Object(id=SYNC_SERVER))
-        self.bot.tree.add_command(self.menu, guild=discord.Object(id=SYNC_SERVER))
+        self.bot.tree.add_command(self.close, guild=discord.Object(id=SYNC_SERVER))

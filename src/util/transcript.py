@@ -6,6 +6,7 @@ import markdown
 from constants import *
 from modals.ticketmodals import *
 from util.ticket_creator import get_ticket_creator, get_ticket_users
+from collections import Counter
 
 async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
     guild = interaction.guild
@@ -80,29 +81,35 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
     transcript_file_trans = discord.File(buffer_trans, filename=f"transcript von {channel.name}.html")
     
     message_count = 0
-    async for _ in channel.history(limit=None):
-        if not _.author.bot:
+    async for message in channel.history(limit=None):
+        if not message.author.bot:
             message_count += 1
-
+            
     member_count = 0
+    users = await get_ticket_users(interaction.channel)
+    user_list = [user for user in users if not user.bot]
+    member_count = len(user_list)
+
+    user_message_counts = Counter()
+    async for message in channel.history(limit=None):
+        if not message.author.bot:
+            user_message_counts[message.author.name] += 1
+
+    user_message_count_str = "\n".join(
+        f"* {user} ({count})" for user, count in user_message_counts.items()
+    )
     
-    members = channel.members
-    for member in members:
-        member_count += 1
-        
     embed = discord.Embed(
         title=f"{TRANSCRIPT_EMOJI} Transkript - {channel.name}",
         description="**Stats**",
         color=0x00ff00
     )
 
-    users = await get_ticket_users(interaction.channel)
-    user_list_str = "\n".join([f"* {user.name}" for user in users])
     embed.set_author(name=TICKET_CREATOR if TICKET_CREATOR else None, icon_url=TICKET_CREATOR.avatar.url if TICKET_CREATOR else None)
-    embed.add_field(name="Beschreibung", value=summary, inline=False)
+    embed.add_field(name="Beschreibung", value=summary if summary else "Keine Beschreibung gegeben.", inline=False)
     embed.add_field(name="Nachrichten", value=message_count, inline=True)
     embed.add_field(name="Erstellt von", value=TICKET_CREATOR if TICKET_CREATOR else None, inline=True)
-    embed.add_field(name=f"Benutzer (Insgesamt: {member_count})", value=user_list_str, inline=False)
+    embed.add_field(name=f"Benutzer (Insgesamt: {member_count})", value=user_message_count_str, inline=False)
     embed.set_thumbnail(url=interaction.user.avatar.url)
     embed.set_footer(text="JabUB.css | by www.ninoio.gay")
     embed.timestamp = discord.utils.utcnow()

@@ -41,6 +41,7 @@ class Bot(commands.Bot):
         # Add persistent views
         self.add_view(TicketSetupView(ticketcog=ticket_cog))
         self.add_view(PersistentCloseView(bot=self, ticketcog=ticket_cog))
+        self.add_view(CloseThreadView(bot=self, ticketcog=ticket_cog))
 
         # Slash-Command-Sync beim Setup
         synced = await self.tree.sync(guild=GUILD_ID)

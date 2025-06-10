@@ -94,21 +94,21 @@ class CloseReasonConfirmView(View):
 
 # The close view, if you close a ticket
 class CloseThreadView(View):
-    def __init__(self, *, timeout = None, ticketcog: "TicketCog", bot):
-        super().__init__(timeout=timeout)
+    def __init__(self, bot, ticketcog: "TicketCog"):
+        super().__init__(timeout=None)
         self.ticketcog = ticketcog
         self.bot = bot
         
-        archive_button = Button(emoji=ARCHIVE_EMOJI, style=SECONDARY, label="Archivieren")
+        archive_button = Button(emoji=ARCHIVE_EMOJI, style=SECONDARY, label="Archivieren", custom_id="archive_ticket_button")
         archive_button.callback = self.archive_button
         
-        delete_button = Button(emoji=TRASHCAN_EMOJI, style=DANGER, label="Löschen")
+        delete_button = Button(emoji=TRASHCAN_EMOJI, style=DANGER, label="Löschen", custom_id="delete_ticket_button")
         delete_button.callback = self.delete_button
         
-        trans_button = Button(emoji=TRANSCRIPT_EMOJI, style=SECONDARY, label="Transkribieren")
+        trans_button = Button(emoji=TRANSCRIPT_EMOJI, style=SECONDARY, label="Transkribieren", custom_id="transcript_ticket_button")
         trans_button.callback = self.trans_button
         
-        reopen_button = Button(emoji=REOPEN_EMOJI, style=GREEN, label="Neu eröffnen")
+        reopen_button = Button(emoji=REOPEN_EMOJI, style=GREEN, label="Neu eröffnen", custom_id="reopen_ticket_button")
         reopen_button.callback = self.reopen_button
         
   
