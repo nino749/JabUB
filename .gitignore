@@ -6,3 +6,8 @@ channel.json
 with_ai.py
 .venv
 .vscode
+src/__pycache__
+src/cogs/__pycache__
+src/modals/__pycache__
+src/util/__pycache__
+src/views/__pycache__
