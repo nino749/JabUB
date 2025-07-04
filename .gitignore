@@ -5,3 +5,4 @@ config
 channel.json
 with_ai.py
 .venv
+.vscode

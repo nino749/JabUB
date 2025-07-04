@@ -3,7 +3,6 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 import aiohttp
-import discord.ext
 from constants import *
 from views.ticketviews import *
 from modals.ticketmodals import *
@@ -11,6 +10,7 @@ from util.ticket_creator import *
 from util.queue import *
 from util.play_next import *
 from embeds import *
+from texts import *
 
 class RadioCog(commands.Cog):
     def __init__(self, bot):

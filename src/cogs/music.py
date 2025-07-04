@@ -10,6 +10,7 @@ from constants import *
 from util.queue import *
 from util.play_next import play_next
 from embeds import *
+from texts import *
 
 guild_queues = {}
 

@@ -75,7 +75,8 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
     trans_channel = bot.get_channel(int(TRANS_CHANNEL_ID))
     
     buffer_trans = io.BytesIO(rendered_html.encode())
-    await interaction.edit_original_response(content=f"> {TRANSCRIPT_EMOJI} Transkript in {trans_channel.mention} erstellt!")
+    transcript_message = await trans_channel.send(file=discord.File(io.BytesIO(rendered_html.encode()), filename=f"transcript von {channel.name}.html"))
+    await interaction.edit_original_response(content=f"> {TRANSCRIPT_EMOJI} Transkript in {trans_channel.mention} erstellt! {transcript_message.jump_url}")
 
     print(f"DEBUG     Größe des Buffers (trans_channel): {buffer_trans.getbuffer().nbytes} Bytes")
     transcript_file_trans = discord.File(buffer_trans, filename=f"transcript von {channel.name}.html")
@@ -111,7 +112,7 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
     embed.add_field(name="Erstellt von", value=TICKET_CREATOR if TICKET_CREATOR else None, inline=True)
     embed.add_field(name=f"Benutzer (Insgesamt: {member_count})", value=user_message_count_str, inline=False)
     embed.set_thumbnail(url=interaction.user.avatar.url)
-    embed.set_footer(text="JabUB.css | by www.ninoio.gay")
+    embed.set_footer(text=EMBED_FOOTER)
     embed.timestamp = discord.utils.utcnow()
     
     await trans_channel.send(embed=embed, file=transcript_file_trans)
