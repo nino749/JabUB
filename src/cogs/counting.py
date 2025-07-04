@@ -54,9 +54,9 @@ class CountingCog(commands.Cog):
             
         expected_number = self.counting_channels[channel_id] + 1
 
-        # if self.last_user[channel_id] == message.author.id:
-        #     await message.delete(delay=0)
-        #     return
+        if self.last_user[channel_id] == message.author.id:
+            await message.delete(delay=0)
+            return
 
         if number == expected_number:
             self.counting_channels[channel_id] += 1
