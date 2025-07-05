@@ -13,6 +13,9 @@ from util.queue import *
 from embeds import *
 from texts import *
 from views.ticketviews import ActionsView
+import json
+import os
+from datetime import datetime, timedelta
 
 guild_queues = {}
 
@@ -322,7 +325,11 @@ class MusicCog(commands.Cog):
         
     @app_commands.command(name="chart", description="Plays a random song from the YouTube Music charts")
     async def play_chart(self, interaction: discord.Interaction):
-        await interaction.response.defer()
+        # Check if user is timed out
+        if await self.check_timeout_decorator(interaction):
+            return
+        else:
+            await interaction.response.defer()
         
         loading_embed = discord.Embed(
             title="📊 Fetching Chart Songs",
@@ -539,7 +546,11 @@ class MusicCog(commands.Cog):
                 await self.play_next(guild=interaction.guild, voice_client=voice_client, interaction=interaction)
     
     async def insipre_me(self, interaction: discord.Interaction):
-        await interaction.response.defer()
+        # Check if user is timed out
+        if await self.check_timeout_decorator(interaction):
+            return
+        else:
+            await interaction.response.defer()
         
         random_songs = [
             "Never Gonna Give You Up Rick Astley",
@@ -813,7 +824,11 @@ class MusicCog(commands.Cog):
     @app_commands.command(name="play", description="Plays music")
     @app_commands.describe(song="URL or search term")
     async def play(self, interaction: discord.Interaction, song: str):
-        await interaction.response.defer()
+        # Check if user is timed out
+        if await self.check_timeout_decorator(interaction):
+            return
+        else:
+            await interaction.response.defer()
         
         if interaction.guild.id not in guild_queues:
             guild_queues[interaction.guild.id] = OptimizedQueue()
@@ -952,6 +967,9 @@ class MusicCog(commands.Cog):
     @app_commands.command(name="skip", description="skips the current song")
     async def skip(self, interaction: discord.Interaction):
         voice_client = interaction.guild.voice_client
+        # Check if user is timed out
+        if await self.check_timeout_decorator(interaction):
+            return
 
         if not voice_client or not voice_client.is_playing():
             await interaction.response.send_message(
@@ -1023,6 +1041,9 @@ class MusicCog(commands.Cog):
     async def list(self, interaction: discord.Interaction):
         queue = guild_queues.get(interaction.guild.id)
         wait_time = 0
+        # Check if user is timed out
+        if await self.check_timeout_decorator(interaction):
+            return
 
         voice_client = interaction.guild.voice_client
         if voice_client and voice_client.channel:
@@ -1099,6 +1120,9 @@ class MusicCog(commands.Cog):
     
     @app_commands.command(name="disconnect", description="Disconnects the Bot")
     async def leave(self, i: discord.Interaction):
+        # Check if user is timed out
+        if await self.check_timeout_decorator(i):
+            return
         voice_client = i.guild.voice_client
         if voice_client and voice_client.channel:
             if not i.user.voice or i.user.voice.channel != voice_client.channel:
@@ -1163,6 +1187,10 @@ class MusicCog(commands.Cog):
     
     @app_commands.command(name="shuffle", description="Shuffles the queue")
     async def shuffle(self, interaction: discord.Interaction):
+        # Check if user is timed out
+        if await self.check_timeout_decorator(interaction):
+            return
+        
         voice_client = interaction.guild.voice_client
         if voice_client and voice_client.channel:
             if not interaction.user.voice or interaction.user.voice.channel != voice_client.channel:
@@ -1238,6 +1266,9 @@ class MusicCog(commands.Cog):
     
     @app_commands.command(name="pause", description="Pauses or resumes the playback")
     async def pause(self, interaction: discord.Interaction):
+        # Check if user is timed out
+        if await self.check_timeout_decorator(interaction):
+            return
         voice_client = interaction.guild.voice_client
 
         if not voice_client or (not voice_client.is_playing() and not voice_client.is_paused()):
@@ -1349,6 +1380,268 @@ class MusicCog(commands.Cog):
                     await self.send_static_message()
             except Exception as e:
                 print(f"Error sending disconnect message: {e}")
+                
+    @app_commands.command(name="musicmute", description="Timeout a user from using music commands")
+    @app_commands.describe(user="The user to timeout", duration="Duration in minutes")
+    async def timeout_user_command(self, interaction: discord.Interaction, user: discord.Member, duration: int):
+        await self.timeout_user(interaction, user, duration)
+    
+    async def timeout_user(self, interaction: discord.Interaction, user: discord.Member, duration: int):
+        if not interaction.user.guild_permissions.manage_messages:
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    title="❌ No Permission",
+                    description="**You don't have permission to timeout users!**",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
+            return
+        
+        if duration <= 0 or duration > 2880:
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    title="❌ Invalid Duration",
+                    description="**Duration must be between 1 and 2880 minutes (48 hours)**",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
+            return
+        
+        timeout_file = "timeouts.json"
+        timeouts = {}
+        
+        if os.path.exists(timeout_file):
+            try:
+                with open(timeout_file, 'r') as f:
+                    timeouts = json.load(f)
+            except json.JSONDecodeError:
+                timeouts = {}
+        
+        end_time = datetime.now() + timedelta(minutes=duration)
+        
+        timeouts[str(user.id)] = {
+            "user_id": user.id,
+            "username": user.display_name,
+            "timeout_by": interaction.user.id,
+            "timeout_by_name": interaction.user.display_name,
+            "start_time": datetime.now().isoformat(),
+            "end_time": end_time.isoformat(),
+            "duration_minutes": duration,
+            "guild_id": interaction.guild.id
+        }
+        
+        try:
+            with open(timeout_file, 'w') as f:
+                json.dump(timeouts, f, indent=2)
+        except Exception as e:
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    title="❌ Error",
+                    description=f"**Failed to save timeout data**\n\n```\n{e}\n```",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
+            return
+        
+        embed = discord.Embed(
+            title="⏰ User Timed Out",
+            description=f"**{user.display_name}** has been timed out from music commands",
+            color=0xe67e22
+        )
+        embed.add_field(
+            name="⏱️ **Duration**",
+            value=f"```\n{duration} minutes\n```",
+            inline=True
+        )
+        embed.add_field(
+            name="🕒 **Ends At**",
+            value=f"```\n{end_time.strftime('%H:%M:%S')}\n```",
+            inline=True
+        )
+        embed.add_field(
+            name="👮 **Moderator**",
+            value=f"```\n{interaction.user.display_name}\n```",
+            inline=True
+        )
+        embed.set_thumbnail(url=user.avatar.url if user.avatar else None)
+        embed.timestamp = discord.utils.utcnow()
+        
+        await interaction.response.send_message(embed=embed, ephemeral=True, delete_after=10, silent=True)
+
+    def cleanup_expired_timeouts(self):
+        timeout_file = "timeouts.json"
+        
+        if not os.path.exists(timeout_file):
+            return
+        
+        try:
+            with open(timeout_file, 'r') as f:
+                timeouts = json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError):
+            return
+        
+        current_time = datetime.now()
+        expired_users = []
+        
+        for user_id, timeout_data in timeouts.items():
+            end_time = datetime.fromisoformat(timeout_data["end_time"])
+            if current_time > end_time:
+                expired_users.append(user_id)
+        
+        for user_id in expired_users:
+            del timeouts[user_id]
+        
+        if expired_users:
+            try:
+                with open(timeout_file, 'w') as f:
+                    json.dump(timeouts, f, indent=2)
+            except Exception as e:
+                print(f"Error updating timeout file: {e}")
+
+    def is_user_timed_out(self, user_id: int) -> bool:
+        self.cleanup_expired_timeouts()
+        
+        timeout_file = "timeouts.json"
+        
+        if not os.path.exists(timeout_file):
+            return False
+        
+        try:
+            with open(timeout_file, 'r') as f:
+                timeouts = json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError):
+            return False
+        
+        user_key = str(user_id)
+        if user_key not in timeouts:
+            return False
+        
+        end_time = datetime.fromisoformat(timeouts[user_key]["end_time"])
+        if datetime.now() > end_time:
+            del timeouts[user_key]
+            try:
+                with open(timeout_file, 'w') as f:
+                    json.dump(timeouts, f, indent=2)
+            except Exception:
+                pass
+            return False
+        
+        return True
+
+    async def check_timeout_decorator(self, interaction: discord.Interaction):
+        if self.is_user_timed_out(interaction.user.id):
+            timeout_file = "timeouts.json"
+            with open(timeout_file, 'r') as f:
+                timeouts = json.load(f)
+            
+            user_timeout = timeouts[str(interaction.user.id)]
+            end_time = datetime.fromisoformat(user_timeout["end_time"])
+            remaining_minutes = int((end_time - datetime.now()).total_seconds() / 60)
+            
+            embed = discord.Embed(
+                title="⏰ You Are Muted.",
+                description=f"**You cannot use music commands right now**\n\n🚫 *Timeout active*",
+                color=0xe74c3c
+            )
+            embed.add_field(
+                name="⏱️ **Time Remaining**",
+                value=f"```\n{remaining_minutes} minutes\n```",
+                inline=True
+            )
+            embed.add_field(
+                name="🕒 **Ends At**",
+                value=f"```\n{end_time.strftime('%H:%M:%S')}\n```",
+                inline=True
+            )
+            embed.add_field(
+                name="👮 **Timed Out By**",
+                value=f"```\n{user_timeout['timeout_by_name']}\n```",
+                inline=True
+            )
+            embed.timestamp = discord.utils.utcnow()
+            
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return True
+        return False
+
+    @app_commands.command(name="unmusicmute", description="Remove timeout from a user")
+    @app_commands.describe(user="The user to remove timeout from")
+    async def untimeout_user(self, interaction: discord.Interaction, user: discord.Member):
+        if not interaction.user.guild_permissions.manage_messages:
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    title="❌ No Permission",
+                    description="**You don't have permission to remove timeouts!**\n\n🔒 *Requires: Manage Messages*",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
+            return
+        
+        timeout_file = "timeouts.json"
+        
+        if not os.path.exists(timeout_file):
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    title="❌ No Timeouts",
+                    description="**No timeout data found**",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
+            return
+        
+        try:
+            with open(timeout_file, 'r') as f:
+                timeouts = json.load(f)
+        except json.JSONDecodeError:
+            timeouts = {}
+        
+        user_key = str(user.id)
+        if user_key not in timeouts:
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    title="❌ Not Timed Out",
+                    description=f"**{user.display_name}** is not currently timed out",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
+            return
+        
+        del timeouts[user_key]
+        
+        try:
+            with open(timeout_file, 'w') as f:
+                json.dump(timeouts, f, indent=2)
+        except Exception as e:
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    title="❌ Error",
+                    description=f"**Failed to save timeout data**\n\n```\n{e}\n```",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
+            return
+        
+        embed = discord.Embed(
+            title="✅ Timeout Removed",
+            description=f"**{user.display_name}** can now use music commands again",
+            color=0x27ae60
+        )
+        embed.add_field(
+            name="👮 **Removed By**",
+            value=f"```\n{interaction.user.display_name}\n```",
+            inline=True
+        )
+        embed.set_thumbnail(url=user.avatar.url if user.avatar else None)
+        embed.timestamp = discord.utils.utcnow()
+        
+        await interaction.response.send_message(embed=embed)
 
     async def cog_load(self):
         self.bot.tree.add_command(self.play, guild=discord.Object(id=SYNC_SERVER))
@@ -1358,6 +1651,7 @@ class MusicCog(commands.Cog):
         self.bot.tree.add_command(self.shuffle, guild=discord.Object(id=SYNC_SERVER))
         self.bot.tree.add_command(self.play_chart, guild=discord.Object(id=SYNC_SERVER))
         self.bot.tree.add_command(self.pause, guild=discord.Object(id=SYNC_SERVER))
+        self.bot.tree.add_command(self.timeout_user_command, guild=discord.Object(id=SYNC_SERVER))
         
     async def cog_unload(self):
         for task in self.background_tasks:

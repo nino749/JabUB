@@ -86,7 +86,7 @@ class Bot(commands.Bot):
         for cmd in synced:
             cmds.append(cmd.name)
             
-        logger.info(f"+  Synced {len(cmds)} commands: {', '.join(cmds)}")
+        logger.info(f"---> Synced {len(cmds)} commands: {', '.join(cmds)}")
             
     async def on_ready(self):
         logger.info("""

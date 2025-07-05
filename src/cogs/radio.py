@@ -4,7 +4,7 @@ from discord.ext import commands
 from discord import app_commands
 import aiohttp
 import re
-from typing import Optional, Union
+from typing import Optional
 from constants import *
 from views.ticketviews import *
 from modals.ticketmodals import *
