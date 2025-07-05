@@ -12,6 +12,7 @@ from cogs.music import MusicCog
 from cogs.radio import RadioCog
 from cogs.counting import CountingCog
 from cogs.guess_the_number import GuessNumberCog
+from cogs.art import ArtCog
 import colorlog
 
 # Setup colored logging
@@ -55,11 +56,12 @@ intents.message_content = True
 intents.typing = True
 intents.presences = True
 intents.members = True
+intents.voice_states = True
 
 # Define the bot
 class Bot(commands.Bot):
     def __init__(self, *args, **kwargs):
-        super().__init__(command_prefix="!", intents=intents, activity=discord.Activity(name="/github • /menu", type=discord.ActivityType.competing), *args, **kwargs)
+        super().__init__(command_prefix="!", intents=intents, activity=discord.Activity(name="/github • /art", type=discord.ActivityType.competing), *args, **kwargs)
 
     async def setup_hook(self):
         # Add the cogs to the bot
@@ -70,11 +72,13 @@ class Bot(commands.Bot):
         await self.add_cog(RadioCog(self))
         await self.add_cog(CountingCog(self))
         await self.add_cog(GuessNumberCog(self))
+        await self.add_cog(ArtCog(self))
 
         # Add persistent views
         self.add_view(TicketSetupView(ticketcog=ticket_cog))
         self.add_view(PersistentCloseView(bot=self, ticketcog=ticket_cog))
         self.add_view(CloseThreadView(bot=self, ticketcog=ticket_cog))
+        self.add_view(ActionsView(bot=self))
 
         # Slash-Command-Sync while Setup
         synced = await self.tree.sync(guild=GUILD_ID)
@@ -90,7 +94,9 @@ class Bot(commands.Bot):
         """)
         logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
         logger.info(f"---------------------------------------------------")
-
+        await self.get_cog('MusicCog').send_static_message()
+        logger.info(f"Sent static music embed.")
+        
 # Starting the bot
 async def main():
     bot = Bot()

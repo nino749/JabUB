@@ -6,6 +6,7 @@ from dotenv import dotenv_values
 
 SEND_TICKET_FEEDBACK = True # Set to True to send feedback to users when their ticket is closed
 
+SET_VC_STATUS_TO_MUSIC_PLAYING = True
 #---------------------------------------------------------------------------------------------#
 #---------------------------------------------------------------------------------------------#
 
@@ -14,7 +15,7 @@ _config = dotenv_values(".env")
 TICKET_CHANNEL_ID = _config.get("TICKET_CHANNEL_ID")
 TOKEN = _config.get('DISCORD_TOKEN')
 SYNC_SERVER = _config.get('SERVER')
-i_channel = _config.get('I_CHANNEL')
+I_CHANNEL = _config.get('I_CHANNEL')
 TRANS_CHANNEL_ID = _config.get('TRANS_CHANNEL')
 TEAM_ROLE = _config.get('TEAM_ROLE')
 SUPPORT_ROLE_NAME = _config.get('SUPPORT_ROLE_NAME')
@@ -40,6 +41,7 @@ LOCK_W_REASON_EMOJI = "<:lock_with_reason:1371107805867671643>"
 DANGER = discord.ButtonStyle.danger
 SECONDARY = discord.ButtonStyle.secondary
 GREEN = discord.ButtonStyle.green
+PURPLE = discord.ButtonStyle.blurple
 
 # YT_OPTS
 YT_OPTS = {
@@ -51,8 +53,8 @@ YT_OPTS = {
     'outtmpl': '-',
     'postprocessors': [{
         'key': 'FFmpegExtractAudio',
-        'preferredcodec': 'mp3',
-        'preferredquality': '192',
+        'preferredcodec': 'opus',
+        'preferredquality': '128',
     }]
 }
 

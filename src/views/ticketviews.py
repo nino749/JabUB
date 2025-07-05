@@ -12,6 +12,8 @@ import colorlog
 
 if TYPE_CHECKING:
     from cogs.tickets import TicketCog
+    from cogs.music import MusicCog
+
     
 # Setup colored logging
 handler = colorlog.StreamHandler()
@@ -45,6 +47,216 @@ handler.setFormatter(colorlog.ColoredFormatter(
 logging.basicConfig(level=logging.INFO, handlers=[handler])
 logger = logging.getLogger(__name__)
 
+class ActionsView(View):
+    def __init__(self, bot):
+        super().__init__(timeout=None)
+        self.bot = bot
+        self.song_history = []
+        
+        ins_song_btn = Button(label="Inspire me", emoji="✨", style=GREEN, custom_id="ran_song_btn")
+        ins_song_btn.callback = self.ran_song
+        
+        charts_btn = Button(label="Charts", emoji="🎶", style=DANGER, custom_id="charts_btn")
+        charts_btn.callback = self.charts_song
+        
+        history_btn = Button(label="History", emoji="📖", style=SECONDARY, custom_id="history_btn")
+        history_btn.callback = self.history_call
+        
+        mostplayed_btn = Button(label="Most played", emoji="❤️", style=PURPLE, custom_id="mostplayed_btn")
+        mostplayed_btn.callback = self.mostplayed
+
+        self.add_item(ins_song_btn)
+        self.add_item(mostplayed_btn)
+        self.add_item(charts_btn)
+        self.add_item(history_btn)
+
+    async def mostplayed(self, interaction):
+        history = await self.get_history(interaction)
+        
+        if not history:
+            await interaction.followup.send("No song history found!", ephemeral=True)
+            return
+        
+        song_counts = {}
+        for song in history:
+            song_counts[song] = song_counts.get(song, 0) + 1
+        
+        sorted_songs = sorted(song_counts.items(), key=lambda x: x[1], reverse=True)
+        
+        most_played_list = []
+        for i, (song, count) in enumerate(sorted_songs[:10], 1):
+            rank_emoji = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else "🎵"
+            most_played_list.append(f"{rank_emoji} **{i}.** {song} `({count} plays)`")
+        
+        most_played_msg = "\n".join(most_played_list)
+        
+        embed = discord.Embed(
+            title="🏆 Most Played Songs",
+            description=f"🎼 **Here are our top tracks:**\n\n{most_played_msg}",
+            color=0xff6b6b
+        )
+        embed.add_field(
+            name="📊 Statistics",
+            value=f"🎵 Total unique songs: **{len(song_counts)}**\n📈 Total plays: **{sum(song_counts.values())}**",
+            inline=False
+        )
+        embed.set_footer(text="🎧 Click the buttons below to play our favorites!", icon_url=interaction.user.display_avatar.url)
+        embed.timestamp = discord.utils.utcnow()
+        
+        view = self.MostPlayedView(self.bot, sorted_songs[:3])
+        
+        await interaction.followup.send(embed=embed, view=view)
+
+
+    class MostPlayedView(View):
+        def __init__(self, bot, top_songs):
+            super().__init__(timeout=300)
+            self.bot = bot
+            
+            for i, (song, count) in enumerate(top_songs):
+                display_name = song[:30] + "..." if len(song) > 30 else song
+                rank_emoji = "🥇" if i == 0 else "🥈" if i == 1 else "🥉"
+                
+                button = Button(
+                    label=f"{rank_emoji} {display_name}",
+                    style=discord.ButtonStyle.primary,
+                    emoji="🎵"
+                )
+                button.callback = self.create_play_callback(song)
+                self.add_item(button)
+    
+        def create_play_callback(self, song):
+            async def play_callback(interaction):
+                music_cog = self.bot.get_cog("MusicCog")
+                if music_cog:
+                    await music_cog.mostplayed_callback(interaction, song)
+                else:
+                    await interaction.response.send_message("Music cog not found!", ephemeral=True)
+            return play_callback
+        
+    async def get_history(self, interaction) -> list:
+        await interaction.response.defer()
+        history_list = []
+        
+        channel = await self.bot.fetch_channel(I_CHANNEL)
+        if channel:
+            async for message in channel.history(limit=150):
+                if (message.author == self.bot.user and 
+                    message.embeds and
+                    message.embeds[0].description and
+                    f"{INFO_EMOJI} Now Playing: " in message.embeds[0].description):
+                    
+                    description = message.embeds[0].description
+                    start_index = description.find(f"{INFO_EMOJI} Now Playing: ")
+                    
+                    if start_index != -1:
+                        after_playing = description[start_index + len(f"{INFO_EMOJI} Now Playing: **"):].strip()
+                        
+                        end_index = after_playing.find('**')
+                        if end_index != -1:
+                            song_name = after_playing[:end_index].strip()
+                        else:
+                            song_name = after_playing.strip()
+                        
+                        if song_name:
+                            history_list.append(song_name)
+                            
+        self.song_history = history_list[::-1]
+        return self.song_history
+        
+    async def ran_song(self, interaction):
+        music_cog: "MusicCog" = self.bot.get_cog("MusicCog")
+        if music_cog:
+            await music_cog.insipre_me(interaction)
+        else:
+            await interaction.followup.send("Music cog not found!", ephemeral=True)
+
+    async def charts_song(self, interaction):
+        music_cog: "MusicCog" = self.bot.get_cog("MusicCog")
+        if music_cog:
+            await music_cog.play_chart.callback(music_cog, interaction)
+        else:
+            await interaction.followup.send("Music cog not found!", ephemeral=True)
+            
+    async def history_call(self, interaction: discord.Interaction):
+        current_history = await self.get_history(interaction=interaction)
+        
+        if not current_history:
+            await interaction.followup.send("No song history found!", ephemeral=True)
+            return
+        
+        page_size = 10
+        total_pages = (len(current_history) + page_size - 1) // page_size
+        
+        def create_history_embed(page: int = 0):
+            start_idx = page * page_size
+            end_idx = start_idx + page_size
+            page_history = current_history[start_idx:end_idx]
+            
+            history_msg = "\n".join([f"🎵 **{start_idx + i + 1}.** {song}" for i, song in enumerate(page_history)])
+            
+            embed = discord.Embed(
+                title="📚 Song History",
+                description=f"🎼 **Our recently played tracks:**\n\n{history_msg}",
+                color=0x4ecdc4
+            )
+            embed.add_field(
+                name="📊 Page Info",
+                value=f"📄 Page **{page + 1}** of **{total_pages}**\n🎵 Total songs: **{len(current_history)}**",
+                inline=True
+            )
+            embed.add_field(
+                name="🎧 Navigation",
+                value="Use the arrows below to browse through pages",
+                inline=True
+            )
+            embed.set_footer(text="🎶 Our music waits!", icon_url=interaction.user.display_avatar.url)
+            embed.timestamp = discord.utils.utcnow()
+            return embed
+        
+        view = self.HistoryView(self.bot, current_history, create_history_embed, total_pages)
+        embed = create_history_embed(0)
+        
+        await interaction.followup.send(embed=embed, view=view)
+
+    class HistoryView(View):
+        def __init__(self, bot, history, embed_func, total_pages):
+            super().__init__(timeout=300)
+            self.bot = bot
+            self.history = history
+            self.embed_func = embed_func
+            self.total_pages = total_pages
+            self.current_page = 0
+            
+            if total_pages > 1:
+                self.prev_btn = Button(emoji="⬅️", style=discord.ButtonStyle.secondary, disabled=True, label="Previous")
+                self.prev_btn.callback = self.prev_page
+                self.add_item(self.prev_btn)
+                
+                self.next_btn = Button(emoji="➡️", style=discord.ButtonStyle.secondary, disabled=(total_pages <= 1), label="Next")
+                self.next_btn.callback = self.next_page
+                self.add_item(self.next_btn)
+            
+        async def prev_page(self, interaction):
+            if self.current_page > 0:
+                self.current_page -= 1
+                embed = self.embed_func(self.current_page)
+                
+                self.prev_btn.disabled = (self.current_page == 0)
+                self.next_btn.disabled = (self.current_page == self.total_pages - 1)
+                
+                await interaction.response.edit_message(embed=embed, view=self)
+        
+        async def next_page(self, interaction):
+            if self.current_page < self.total_pages - 1:
+                self.current_page += 1
+                embed = self.embed_func(self.current_page)
+                
+                self.prev_btn.disabled = (self.current_page == 0)
+                self.next_btn.disabled = (self.current_page == self.total_pages - 1)
+                
+                await interaction.response.edit_message(embed=embed, view=self)
+                
 # Define all persistent views
 class PersistentCloseView(View):
     def __init__(self, bot, ticketcog: "TicketCog"):
