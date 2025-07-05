@@ -61,15 +61,28 @@ class TicketCog(commands.Cog):
 
         await interaction.response.send_message(EMBED_CREATED, ephemeral=True)
         embed = discord.Embed(
-            title=SUPPORT_HEADER_TEXT,
-            description=TICKET_CREATION_EMBED_TEXT,
-            color=0x00ff00
+            title=f"{SUPPORT_HEADER_TEXT}",
+            description=f"📋 {TICKET_CREATION_EMBED_TEXT}",
+            color=0x5865F2
         )
-        embed.set_author(name="Tickets", icon_url=interaction.client.user.avatar.url if interaction.client.user.avatar else None)
+        embed.set_author(
+            name="🎟️ Tickets System", 
+            icon_url=interaction.client.user.avatar.url if interaction.client.user.avatar else None
+        )
 
-        embed.add_field(name=WHAT_NEXT, value=WHAT_NEXT_VALUE)
-        embed.set_footer(text=EMBED_FOOTER)
+        embed.add_field(
+            name=f"❓ {WHAT_NEXT}", 
+            value=f"👇 {WHAT_NEXT_VALUE}", 
+            inline=False
+        )
+        embed.set_footer(
+            text=f"🔥 {EMBED_FOOTER}",
+            icon_url=interaction.guild.icon.url if interaction.guild.icon else None
+        )
 
+        embed.set_thumbnail(url=interaction.guild.icon.url if interaction.guild.icon else None)
+        embed.timestamp = discord.utils.utcnow()
+        
         await interaction.channel.send(embed=embed, view=TicketSetupView(interaction))
         logger.info(f"Ticket setup embed sent by {interaction.user} in channel {interaction.channel}.")
 
@@ -125,16 +138,32 @@ class TicketCog(commands.Cog):
             await thread.edit(invitable=False)
 
             embed = discord.Embed(
-                title=TICKET_OVERVIEW_TITLE,
-                description=CLOSE_EMBED_DESC,
-                color=0x00ff00
+                title=f"{TICKET_OVERVIEW_TITLE}",
+                description=f"ℹ️ {CLOSE_EMBED_DESC}",
+                color=0x00D166
             )
-            embed.set_footer(text=EMBED_FOOTER)
-            embed.set_author(name=interaction.user.name, icon_url=interaction.user.avatar.url if interaction.user.avatar else None)
+            embed.set_footer(
+                text=f"🔥 {EMBED_FOOTER}",
+                icon_url=interaction.guild.icon.url if interaction.guild.icon else None
+            )
+            embed.set_author(
+                name=f"👤 {interaction.user.name}", 
+                icon_url=interaction.user.avatar.url if interaction.user.avatar else None
+            )
 
             for name, value in fields.items():
                 if name not in ["Title", "Rolle", "message"] and value.strip():
-                    embed.add_field(name=name, value=value, inline=False)
+                    emoji = "📝"
+                    if "email" in name.lower():
+                        emoji = "📧"
+                    elif "problem" in name.lower() or "issue" in name.lower():
+                        emoji = "❗"
+                    elif "description" in name.lower():
+                        emoji = "📋"
+                    elif "priority" in name.lower():
+                        emoji = "🚨"
+                    
+                    embed.add_field(name=f"{emoji} {name}", value=f"```{value}```", inline=False)
 
             message = fields.get("message", DEFAULT_HELP_MESSAGE)
 
@@ -152,7 +181,6 @@ class TicketCog(commands.Cog):
             print(f"Fehler beim Erstellen des Tickets: {e}")
             print(traceback.format_exc())
 
-    # Update a ticket after a timeout (30 days by default)
     @commands.Cog.listener(name="THREAD_UPDATE")
     async def on_thread_update(self, before: discord.Thread, after: discord.Thread):
         guild = after.guild

@@ -82,8 +82,11 @@ class Bot(commands.Bot):
 
         # Slash-Command-Sync while Setup
         synced = await self.tree.sync(guild=GUILD_ID)
+        cmds = []
         for cmd in synced:
-            logger.info(f"---> Synced: {cmd.name} *cog / cmd")
+            cmds.append(cmd.name)
+            
+        logger.info(f"+  Synced {len(cmds)} commands: {', '.join(cmds)}")
             
     async def on_ready(self):
         logger.info("""
@@ -94,8 +97,11 @@ class Bot(commands.Bot):
         """)
         logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
         logger.info(f"---------------------------------------------------")
-        await self.get_cog('MusicCog').send_static_message()
-        logger.info(f"Sent static music embed.")
+        try:
+            await self.get_cog('MusicCog').send_static_message()
+            logger.info(f"Sent static music embed.")
+        except Exception as e:
+            logger.error(f"Error sending static music embed: {e}")
         
 # Starting the bot
 async def main():

@@ -1235,6 +1235,71 @@ class MusicCog(commands.Cog):
         embed.timestamp = discord.utils.utcnow()
         
         await interaction.response.send_message(embed=embed)
+    
+    @app_commands.command(name="pause", description="Pauses or resumes the playback")
+    async def pause(self, interaction: discord.Interaction):
+        voice_client = interaction.guild.voice_client
+
+        if not voice_client or (not voice_client.is_playing() and not voice_client.is_paused()):
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    title="❌ Nothing Playing",
+                    description="**No music is currently playing**\n\n🎵 *Use `/play` to start playing music*",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
+            return
+
+        if not interaction.user.voice or interaction.user.voice.channel != voice_client.channel:
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    title="❌ Wrong Voice Channel", 
+                    description="**You must be in the same voice channel as the bot!**\n\n🎧 *Join the bot's voice channel to use this command*",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
+            return
+
+        if voice_client.is_paused():
+            voice_client.resume()
+            
+            embed = discord.Embed(
+                title="▶️ Music Resumed!",
+                description="**Playback has been resumed**\n\n🎵 *Music is now playing again*",
+                color=0x27ae60
+            )
+            embed.add_field(
+                name="🎵 **Status**",
+                value="```\n▶️ Action: Resume\n🎵 Status: Playing\n```",
+                inline=False
+            )
+        else:
+            voice_client.pause()
+            
+            embed = discord.Embed(
+                title="⏸️ Music Paused!",
+                description="**Playback has been paused**\n\n🎵 *Use `/pause` again to resume*",
+                color=0xf39c12
+            )
+            embed.add_field(
+                name="🎵 **Status**",
+                value="```\n⏸️ Action: Pause\n🎵 Status: Paused\n```",
+                inline=False
+            )
+
+        embed.set_author(
+            name=f"🎧 Controlled by {interaction.user.display_name}",
+            icon_url=interaction.user.avatar.url
+        )
+        embed.set_footer(
+            text="🎵 Music Bot • Use /pause to toggle playback",
+            icon_url=self.bot.user.avatar.url if self.bot.user.avatar else None
+        )
+        embed.timestamp = discord.utils.utcnow()
+
+        await interaction.response.send_message(embed=embed)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
@@ -1292,6 +1357,7 @@ class MusicCog(commands.Cog):
         self.bot.tree.add_command(self.leave, guild=discord.Object(id=SYNC_SERVER))
         self.bot.tree.add_command(self.shuffle, guild=discord.Object(id=SYNC_SERVER))
         self.bot.tree.add_command(self.play_chart, guild=discord.Object(id=SYNC_SERVER))
+        self.bot.tree.add_command(self.pause, guild=discord.Object(id=SYNC_SERVER))
         
     async def cog_unload(self):
         for task in self.background_tasks:
