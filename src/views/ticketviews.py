@@ -140,27 +140,30 @@ class ActionsView(View):
         
         channel = await self.bot.fetch_channel(I_CHANNEL)
         if channel:
-            async for message in channel.history(limit=150):
-                if (message.author == self.bot.user and 
-                    message.embeds and
-                    message.embeds[0].description and
-                    f"{INFO_EMOJI} Now Playing: " in message.embeds[0].description):
-                    
-                    description = message.embeds[0].description
-                    start_index = description.find(f"{INFO_EMOJI} Now Playing: ")
-                    
-                    if start_index != -1:
-                        after_playing = description[start_index + len(f"{INFO_EMOJI} Now Playing: **"):].strip()
+            try:
+                async for message in channel.history(limit=300):
+                    if (message.author == self.bot.user and 
+                        message.embeds and
+                        message.embeds[0].description and
+                        f"🎵 Now Playing: **" in message.embeds[0].description):
                         
-                        end_index = after_playing.find('**')
-                        if end_index != -1:
-                            song_name = after_playing[:end_index].strip()
-                        else:
-                            song_name = after_playing.strip()
+                        description = message.embeds[0].description
+                        start_index = description.find(f"🎵 Now Playing: **")
                         
-                        if song_name:
-                            history_list.append(song_name)
+                        if start_index != -1:
+                            after_playing = description[start_index + len(f"🎵 Now Playing: **"):].strip()
                             
+                            end_index = after_playing.find('**')
+                            if end_index != -1:
+                                song_name = after_playing[:end_index].strip()
+                            else:
+                                song_name = after_playing.strip()
+                            
+                            if song_name:
+                                history_list.append(song_name)
+            except Exception as e:
+                print(f"get_history error: {e}")                
+            
         self.song_history = history_list[::-1]
         return self.song_history
         
@@ -201,13 +204,8 @@ class ActionsView(View):
                 color=0x4ecdc4
             )
             embed.add_field(
-                name="📊 Page Info",
-                value=f"📄 Page **{page + 1}** of **{total_pages}**\n🎵 Total songs: **{len(current_history)}**",
-                inline=True
-            )
-            embed.add_field(
-                name="🎧 Navigation",
-                value="Use the arrows below to browse through pages",
+                name="📊 Info",
+                value=f"Page **{page + 1}** of **{total_pages}**\nTotal songs: **{len(current_history)}**",
                 inline=True
             )
             embed.set_footer(text="🎶 Our music waits!", icon_url=interaction.user.display_avatar.url)

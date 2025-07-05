@@ -100,28 +100,28 @@ class MusicCog(commands.Cog):
     async def send_static_message(self):
         try:
             actions_embed = discord.Embed(
-                title="🎵 Music Bot Control Panel",
-                description="Choose one of those actions, if you feel like it! 🎶",
+                title="Music Bot Control Panel",
+                description="Available music commands",
                 color=0x9b59b6
             )
             actions_embed.add_field(
-                name="🎮 **Core Commands**",
-                value="```\n🎵 /play     - Play music from URL or search\n📻 /radio    - Play live radio!\n⏭️ /skip     - Skip current song\n📋 /queue    - View song queue\n🛑 /stop     - Stop music and leave\n🔀 /shuffle  - Shuffle the queue\n📊 /chart    - Play random chart song\n```",
+                name="Core Commands",
+                value="```\n/play     - Play music from URL or search\n/radio    - Play live radio\n/skip     - Skip current song\n/queue    - View song queue\n/stop     - Stop music and leave\n/shuffle  - Shuffle the queue\n/chart    - Play random chart song\n```",
                 inline=False
             )
             actions_embed.add_field(
-                name="🚀 **Bot Status**",
-                value=f"```\n🌐 Connected Servers: {len(self.bot.guilds)}\n👥 Total Users: {len(self.bot.users)}\n🎸 Status: Idle, like always!\n```",
+                name="Bot Status",
+                value=f"```\nConnected Servers: {len(self.bot.guilds)}\nTotal Users: {len(self.bot.users)}\nStatus: Ready\n```",
                 inline=True
             )
             actions_embed.add_field(
-                name="💡 **Tips**",
+                name="Tips",
                 value="```\n• Join a voice channel first\n• Use playlists for bulk adding\n• Supports YouTube links\n```",
                 inline=True
             )
             actions_embed.set_thumbnail(url=self.bot.user.avatar.url if self.bot.user.avatar else None)
             actions_embed.set_footer(
-                text=f"🎵 Music Bot • Serving {len(self.bot.users)} people • Ready to listen! 🎶",
+                text=f"Music Bot • Serving {len(self.bot.users)} users",
                 icon_url=self.bot.user.avatar.url if self.bot.user.avatar else None
             )
             actions_embed.timestamp = discord.utils.utcnow()
@@ -132,7 +132,7 @@ class MusicCog(commands.Cog):
                     if (message.author == self.bot.user and 
                         message.embeds and
                         message.embeds[0].description and
-                        "Choose one of those actions, if you feel like it! 🎶" in message.embeds[0].description):
+                        "Available music commands" in message.embeds[0].description):
                         await message.delete()
                         break
                 
@@ -216,9 +216,14 @@ class MusicCog(commands.Cog):
             date = str(upload_date)
         
         embed = discord.Embed(
-            title="🎵 Now Playing",
-            description=f"**{title}**\n\n🎤 *{author}*",
+            title="📖 Queue",
+            description=f"🎵 Now Playing: **{title}**",
             color=0xe91e63
+        )
+        embed.add_field(
+            name="🧑‍🎤 **Author**",
+            value=f"```{author}```",
+            inline=False
         )
         embed.add_field(
             name="⏱️ **Duration**", 
@@ -232,7 +237,7 @@ class MusicCog(commands.Cog):
         )
         embed.add_field(
             name="🔗 **Links**",
-            value=f"[🎵 Watch on YouTube]({song_url})\n[🎤 More from {author}](https://youtube.com/results?search_query={author.replace(' ', '+')})",
+            value=f"[Watch on YouTube]({song_url})\n[More from {author}](https://youtube.com/results?search_query={author.replace(' ', '+')})",
             inline=True
         )
         embed.set_thumbnail(url=thumbnail)
@@ -426,7 +431,7 @@ class MusicCog(commands.Cog):
             random_chart_song = random.choice(trending_songs)
             
             loading_embed.title = "🎵 Loading Chart Song"
-            loading_embed.description = f"🎯 **Selected:** {random_chart_song}\n\n⏳ *Preparing your music...*"
+            loading_embed.description = f"**Selected:** {random_chart_song}\n\n⏳ *Preparing your music...*"
             loading_embed.color = 0x3498db
             await loading_message.edit(embed=loading_embed)
             
@@ -442,7 +447,7 @@ class MusicCog(commands.Cog):
             random_chart_song = random.choice(fallback_songs)
             
             loading_embed.title = "🎵 Loading Fallback Song"
-            loading_embed.description = f"🎯 **Selected:** {random_chart_song}\n\n⏳ *Using fallback charts...*"
+            loading_embed.description = f"**Selected:** {random_chart_song}\n\n⏳ *Using fallback charts...*"
             loading_embed.color = 0xe67e22
             await loading_message.edit(embed=loading_embed)
         
@@ -477,7 +482,7 @@ class MusicCog(commands.Cog):
             
             success_embed = discord.Embed(
                 title="📊 Chart Song Added!",
-                description=f"🎵 **{title}**\n\n✅ *Added to queue successfully*",
+                description=f"**{title}**\n\n✅ *Added to queue successfully*",
                 color=0x27ae60
             )
             success_embed.set_thumbnail(url=thumbnail)
@@ -597,7 +602,7 @@ class MusicCog(commands.Cog):
         
         loading_embed = discord.Embed(
             title="✨ Inspiration Mode",
-            description=f"🎲 **Random Pick:** {random_song}\n\n⏳ *Preparing your surprise...*",
+            description=f"✨ **Inspired Pick:** {random_song}\n\n⏳ *Preparing your surprise...*",
             color=0x9b59b6
         )
         loading_embed.set_thumbnail(url="https://i.imgur.com/ZKwSz4A.gif")
@@ -814,12 +819,8 @@ class MusicCog(commands.Cog):
             description=f"🔍 **Searching for:** {song}\n\n⏳ *Processing your request...*",
             color=0x3498db
         )
-        loading_embed.set_thumbnail(url="https://i.imgur.com/ZKwSz4A.gif")
-        loading_embed.add_field(
-            name="🎯 **Supported Sources**",
-            value="```\n🎵 YouTube```",
-            inline=False
-        )
+        loading_embed.set_thumbnail(url="https://i.pinimg.com/564x/bc/0b/c2/bc0bc24abc32472c8d726c7bd0fc8f59.jpg")
+
         loading_embed.timestamp = discord.utils.utcnow()
 
         loading_message = await interaction.followup.send(embed=loading_embed)
@@ -848,7 +849,7 @@ class MusicCog(commands.Cog):
             entries = [e for e in info["entries"] if e]
             
             processing_embed = discord.Embed(
-                title="🎵 Processing Playlist",
+                title="🎵 Processing Playlist...",
                 description=f"📋 **Found {len(entries)} songs**\n\n⏳ *Adding to queue...*",
                 color=0xf39c12
             )
@@ -860,7 +861,7 @@ class MusicCog(commands.Cog):
             )
             processing_embed.timestamp = discord.utils.utcnow()
             
-            await interaction.channel.send(embed=processing_embed)
+            processing_message = await interaction.channel.send(embed=processing_embed)
             
             processed_songs = await self.process_song_entries(entries, interaction.guild.id)
             
@@ -911,7 +912,9 @@ class MusicCog(commands.Cog):
                 
                 await interaction.channel.send(embed=success_embed)
 
+        await processing_message.delete()
         await loading_message.delete()
+        
 
         if not interaction.user.voice:
             await interaction.followup.send(
@@ -930,6 +933,7 @@ class MusicCog(commands.Cog):
             await channel.connect(self_deaf=True)
             voice_client = interaction.guild.voice_client
             voice_channel = voice_client.channel
+            processed_song = await self.process_single_entry(info)
             
             if SET_VC_STATUS_TO_MUSIC_PLAYING:
                 current_song = processed_song[1][0] if processed_song else "Music"
