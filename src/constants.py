@@ -6,7 +6,8 @@ from dotenv import dotenv_values
 
 SEND_TICKET_FEEDBACK = True # Set to True to send feedback to users when their ticket is closed
 
-SET_VC_STATUS_TO_MUSIC_PLAYING = True
+SET_VC_STATUS_TO_MUSIC_PLAYING = False # Set to True, if the bot should change the VS status
+
 #---------------------------------------------------------------------------------------------#
 #---------------------------------------------------------------------------------------------#
 

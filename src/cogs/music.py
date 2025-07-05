@@ -217,22 +217,17 @@ class MusicCog(commands.Cog):
         
         embed = discord.Embed(
             title="📖 Queue",
-            description=f"🎵 Now Playing: **{title}**",
+            description=f"```🎵 Now Playing: {title}```",
             color=0xe91e63
         )
         embed.add_field(
             name="🧑‍🎤 **Author**",
-            value=f"```{author}```",
-            inline=False
+            value=f"{author}",
+            inline=True
         )
         embed.add_field(
             name="⏱️ **Duration**", 
-            value=f"```\n▶️ Started: ✅\n⏳ Total: {format_time(duration)}\n```", 
-            inline=False
-        )
-        embed.add_field(
-            name="📊 **Statistics**",
-            value=f"```\n👍 Likes: {format_number(likes)}\n👁️ Views: {format_number(views)}\n📅 Upload: {date}\n```",
+            value=f"⏳ Duration: {format_time(duration)}\n", 
             inline=True
         )
         embed.add_field(
@@ -240,6 +235,11 @@ class MusicCog(commands.Cog):
             value=f"[Watch on YouTube]({song_url})\n[More from {author}](https://youtube.com/results?search_query={author.replace(' ', '+')})",
             inline=True
         )
+        # embed.add_field(
+        #     name="📊 **Statistics**",
+        #     value=f"👍 Likes: {format_number(likes)}  👁️ Views: {format_number(views)}  📅 Upload: {date}\n",
+        #     inline=False
+        # )
         embed.set_thumbnail(url=thumbnail)
         embed.set_author(
             name=f"🎧 Requested by {interaction.user.display_name}",
@@ -523,6 +523,7 @@ class MusicCog(commands.Cog):
             if SET_VC_STATUS_TO_MUSIC_PLAYING:
                 current_song = processed_song[1][0] if processed_song else "Music"
                 await voice_channel.edit(status=f"Listening to: {current_song}")
+                
         
         if voice_client and voice_client.channel and interaction.user.voice.channel != voice_client.channel:
             await interaction.followup.send(
@@ -1096,7 +1097,7 @@ class MusicCog(commands.Cog):
 
         await interaction.response.send_message(embed=embed)
     
-    @app_commands.command(name="stop", description="Stops the Bot")
+    @app_commands.command(name="disconnect", description="Disconnects the Bot")
     async def leave(self, i: discord.Interaction):
         voice_client = i.guild.voice_client
         if voice_client and voice_client.channel:
