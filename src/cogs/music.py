@@ -813,6 +813,32 @@ class MusicCog(commands.Cog):
     @app_commands.describe(song="URL or search term")
     async def play(self, interaction: discord.Interaction, song: str):
         await interaction.response.defer()
+        
+        if interaction.guild.id not in guild_queues:
+            guild_queues[interaction.guild.id] = OptimizedQueue()
+        queue = guild_queues[interaction.guild.id]
+        voice_client = interaction.guild.voice_client
+        
+        if voice_client and voice_client.channel and interaction.user.voice.channel != voice_client.channel:
+            await interaction.followup.send(
+                embed=discord.Embed(
+                    title="❌ Wrong Voice Channel",
+                    description="**You must be in the same voice channel as the bot!**\n\n🎧 *Join the bot's voice channel to use this command*",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
+
+        if not interaction.user.voice:
+            await interaction.followup.send(
+                embed=discord.Embed(
+                    title="❌ Voice Channel Required",
+                    description="**You need to be in a voice channel!**\n\n🎧 *Join a voice channel and try again*",
+                    color=0xe74c3c
+                ),
+                ephemeral=True
+            )
+            return
 
         loading_embed = discord.Embed(
             title="🎵 Loading Music",
@@ -822,9 +848,7 @@ class MusicCog(commands.Cog):
         loading_embed.set_thumbnail(url="https://i.pinimg.com/564x/bc/0b/c2/bc0bc24abc32472c8d726c7bd0fc8f59.jpg")
 
         loading_embed.timestamp = discord.utils.utcnow()
-
         loading_message = await interaction.followup.send(embed=loading_embed)
-
         search_query = song if song.startswith("http") else f"ytsearch:{song}"
         
         try:
@@ -840,11 +864,6 @@ class MusicCog(commands.Cog):
             )
             return
 
-        if interaction.guild.id not in guild_queues:
-            guild_queues[interaction.guild.id] = OptimizedQueue()
-        
-        queue = guild_queues[interaction.guild.id]
-        
         if "entries" in info:
             entries = [e for e in info["entries"] if e]
             
@@ -914,20 +933,7 @@ class MusicCog(commands.Cog):
 
         await processing_message.delete()
         await loading_message.delete()
-        
 
-        if not interaction.user.voice:
-            await interaction.followup.send(
-                embed=discord.Embed(
-                    title="❌ Voice Channel Required",
-                    description="**You need to be in a voice channel!**\n\n🎧 *Join a voice channel and try again*",
-                    color=0xe74c3c
-                ),
-                ephemeral=True
-            )
-            return
-
-        voice_client = interaction.guild.voice_client
         if not voice_client or not voice_client.is_connected():
             channel = interaction.user.voice.channel
             await channel.connect(self_deaf=True)
@@ -938,20 +944,10 @@ class MusicCog(commands.Cog):
             if SET_VC_STATUS_TO_MUSIC_PLAYING:
                 current_song = processed_song[1][0] if processed_song else "Music"
                 await voice_channel.edit(status=f"Listening to: {current_song}")
+        
+        if not queue.playing and not voice_client.is_playing() and not queue.is_empty():
+            await self.play_next(guild=interaction.guild, voice_client=voice_client, interaction=interaction)
 
-        if voice_client and voice_client.channel and interaction.user.voice.channel != voice_client.channel:
-            await interaction.followup.send(
-                embed=discord.Embed(
-                    title="❌ Wrong Voice Channel",
-                    description="**You must be in the same voice channel as the bot!**\n\n🎧 *Join the bot's voice channel to use this command*",
-                    color=0xe74c3c
-                ),
-                ephemeral=True
-            )
-        else:
-            if not queue.playing and not voice_client.is_playing() and not queue.is_empty():
-                await self.play_next(guild=interaction.guild, voice_client=voice_client, interaction=interaction)
-                
     @app_commands.command(name="skip", description="skips the current song")
     async def skip(self, interaction: discord.Interaction):
         voice_client = interaction.guild.voice_client
@@ -1150,8 +1146,11 @@ class MusicCog(commands.Cog):
         embed.timestamp = discord.utils.utcnow()
         
         if i.guild.voice_client:
+            voice_channel = voice_client.channel
+            await voice_channel.edit(status=None)
             await i.guild.voice_client.disconnect()
             await i.response.send_message(embed=embed)
+            await self.send_static_message()
         else:
             await i.response.send_message(
                 embed=discord.Embed(
