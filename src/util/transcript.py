@@ -7,6 +7,7 @@ from constants import *
 from modals.ticketmodals import *
 from util.ticket_creator import get_ticket_creator, get_ticket_users
 from collections import Counter
+import re
 
 async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
     guild = interaction.guild
@@ -26,22 +27,51 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
     render_messages = []
 
     async for msg in channel.history(limit=None):
+        if not msg.clean_content and not msg.embeds and not msg.attachments:
+            continue
+            
         embed_data = []
         for e in msg.embeds:
+            title = markdown.markdown(e.title) if e.title else None
+            description = markdown.markdown(e.description) if e.description else None
+            
+            processed_fields = []
+            for field in e.fields:
+                field_name = markdown.markdown(field.name) if field.name else ""
+                field_value = markdown.markdown(field.value) if field.value else ""
+                processed_fields.append({
+                    "name": field_name,
+                    "value": field_value,
+                    "inline": field.inline
+                })
+            
             embed_dict = {
-                "title": e.title,
-                "description": e.description,
+                "title": title,
+                "description": description,
                 "color": f"#{e.color.value:06x}" if e.color else "#4f545c",
                 "image_url": e.image.url if e.image else None,
                 "thumbnail_url": e.thumbnail.url if e.thumbnail else None,
-                "fields": [
-                    {"name": field.name, "value": field.value, "inline": field.inline}
-                    for field in e.fields
-                ]
+                "fields": processed_fields
             }
             embed_data.append(embed_dict)
 
-        html_content = markdown.markdown(msg.clean_content)
+        content = msg.clean_content
+        
+        emoji_pattern = r'<(a?):([^:]+):(\d+)>'
+        
+        url_pattern = r'(https?://\S+)'
+        content = re.sub(url_pattern, r'<a href="\1" target="_blank">\1</a>', content)
+        
+        def replace_emoji(match):
+            animated = match.group(1) == 'a'
+            name = match.group(2)
+            emoji_id = match.group(3)
+            ext = 'gif' if animated else 'png'
+            emoji_url = f"https://cdn.discordapp.com/emojis/{emoji_id}.{ext}"
+            return f'<img src="{emoji_url}" alt=":{name}:" title=":{name}:" class="emoji" width="22" height="22">'
+        
+        content = re.sub(emoji_pattern, replace_emoji, content)
+        html_content = markdown.markdown(content)
 
         render_messages.append({
             "author_name": msg.author.display_name,

@@ -149,26 +149,26 @@ The bot needs the following permissions in your Discord server:
 ## File Structure
 ```bash
 src/
-├── main.py              # Main bot file
-├── constants.py         # Configuration constants
-├── .env                 # Your .env
+├── main.py                 # Main bot file
+├── constants.py            # Configuration constants
+├── .env                    # Your .env
 ├── cogs/
-│   ├── music.py         # Music functionality
-│   ├── tickets.py       # Ticket system
-│   ├── github.py        # GitHub integration
-│   ├── radio.py         # Radio features
-│   ├── counting.py      # Counting game
+│   ├── music.py            # Music functionality
+│   ├── tickets.py          # Ticket system
+│   ├── github.py           # GitHub integration
+│   ├── radio.py            # Radio features
+│   ├── counting.py         # Counting game
 │   └── guess_the_number.py # Number guessing game
 ├── views/
-│   └── ticketviews.py   # Ticket UI components
+│   └── ticketviews.py      # Ticket UI components
 ├── modals/
-│   └── ticketmodals.py  # Ticket forms
+│   └── ticketmodals.py     # Ticket forms
 ├── util/
-│   ├── queue.py         # Music queue management
-│   ├── play_next.py     # Music playback logic
-│   └── ticket_creator.py # Ticket creation utilities
-├── embeds.py            # Discord embed templates
-└── texts.py             # Text constants
+│   ├── queue.py            # Music queue management
+│   ├── play_next.py        # Music playback logic
+│   └── ticket_creator.py   # Ticket creation utilities
+├── embeds.py               # Discord embed templates
+└── texts.py                # Text constants
 ```
 
 ## Dependencies

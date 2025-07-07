@@ -37,13 +37,13 @@ class TransDesc(Modal):
         self.name_TextInput = TextInput(
             label=TICKET_DESCRIPTION_LABEL,
             placeholder="",
-            required=False
+            required=False,
+            style=discord.TextStyle.paragraph
         )
         self.add_item(self.name_TextInput)
 
     async def on_submit(self, interaction: discord.Interaction):
         summary = self.name_TextInput.value
-        
         try:
             await trans_ticket(interaction=interaction, summary=summary, bot=self.bot)
             
