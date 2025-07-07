@@ -348,16 +348,16 @@ class CloseReasonConfirmView(View):
                 await interaction.channel.edit(name=f"[CLOSED] {interaction.channel.name}")
                 await asyncio.sleep(0.5)
                 
-                await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})* aus folgendem Grund: ```{reason}```")
+                await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})* aus folgendem Grund:\n ```{reason}```")
             except discord.HTTPException as e:
                 logger.error(f"HTTPException while closing ticket: {e}")
                 if e.status == 429:
                     await asyncio.sleep(e.retry_after if hasattr(e, 'retry_after') else 1)
                     await interaction.channel.edit(name=f"[CLOSED] {interaction.channel.name}")
                     await asyncio.sleep(0.5)
-                    await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})* aus folgendem Grund: ```{reason}```")
+                    await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})* aus folgendem Grund:\n```{reason}```")
                 else:
-                    await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})* aus folgendem Grund: ```{reason}```")
+                    await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})* aus folgendem Grund:\n```{reason}```")
 
     async def no_button(self, interaction: discord.Interaction):
         logger.info(f"{interaction.user} cancelled closing ticket with reason in {interaction.channel}")
@@ -637,3 +637,74 @@ class DeleteConfirmView(View):
     async def no_button(self, interaction: discord.Interaction):
         logger.info(f"{interaction.user} cancelled deleting ticket in {interaction.channel}")
         await interaction.message.delete()
+
+class RenameThreadModal(discord.ui.Modal, title="Rename Thread"):
+    def __init__(self):
+        super().__init__()
+        
+    name_input = discord.ui.TextInput(
+        label="New Thread Name",
+        placeholder="Enter the new name for this thread...",
+        max_length=100,
+        required=True
+    )
+    
+    async def on_submit(self, interaction: discord.Interaction):
+        new_name = self.name_input.value.strip()
+        
+        if not new_name:
+            await interaction.response.send_message("❌ Thread name cannot be empty!", ephemeral=True)
+            return
+            
+        try:
+            await interaction.channel.edit(name=new_name)
+            logger.info(f"Thread renamed to '{new_name}' by {interaction.user} in {interaction.channel}")
+            await interaction.response.send_message(f"✅ Thread renamed to: **{new_name}**", ephemeral=True)
+        except discord.HTTPException as e:
+            logger.error(f"Failed to rename thread: {e}")
+            await interaction.response.send_message(f"❌ Failed to rename thread: {str(e)}", ephemeral=True)
+
+class RenameThread():
+    def __init__(self):
+        pass
+    
+    async def show_rename_modal(self, interaction: discord.Interaction):
+        modal = RenameThreadModal()
+        await interaction.response.send_modal(modal)
+
+# The private / mod Ticket menu.
+class TicketModMenu(View):
+    def __init__(self, *, bot, timeout = 200, ticketcog: "TicketCog"):
+        super().__init__(timeout=timeout)
+        self.ticketcog = ticketcog
+        self.bot = bot
+        
+        close_btn = Button(emoji=LOCK_EMOJI, label="Close Ticket", style=DANGER)
+        lock_btn = Button(emoji="🔐", label="Lock Ticket", style=PURPLE)
+        rename_btn = Button(emoji="✏️", label="Rename Ticket", style=SECONDARY)
+        trans_btn = Button(emoji=TRANSCRIPT_EMOJI, label="Transcript Ticket", style=SECONDARY)
+        
+        close_btn.callback = self.close_callback
+        lock_btn.callback = self.lock_callback
+        rename_btn.callback = self.rename_callback
+        trans_btn.callback = self.trans_callback
+        
+        self.add_item(close_btn)
+        self.add_item(lock_btn)
+        self.add_item(rename_btn)
+        self.add_item(trans_btn)
+        
+    async def trans_callback(self, interaction: discord.Interaction):
+        await interaction.response.send_modal(TransDesc(bot=self.bot))
+        
+    async def close_callback(self, interaction: discord.Interaction):
+        await interaction.response.send_message(view=CloseConfirmView(bot=self.ticketcog.bot, ticketcog=self.ticketcog), content=f"> {interaction.user.mention} Bist du dir sicher, dass du das Ticket schließen möchtest?")
+        
+    async def lock_callback(self, interaction):
+        await interaction.channel.edit(locked=True)
+        await interaction.response.send_message(f"🔐 Thread locked by {interaction.user.mention}", ephemeral=False)
+
+    async def rename_callback(self, interaction):
+        rename_thread = RenameThread()
+        await rename_thread.show_rename_modal(interaction)
+        

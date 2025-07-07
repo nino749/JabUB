@@ -10,6 +10,7 @@ import traceback
 from texts import *
 import logging
 import colorlog
+from embeds import simple_embed
 
 if TYPE_CHECKING:
     from cogs.tickets import TicketCog
@@ -181,6 +182,80 @@ class TicketCog(commands.Cog):
             print(f"Fehler beim Erstellen des Tickets: {e}")
             print(traceback.format_exc())
 
+    @app_commands.command(name="menu", description="Manage the current ticket thread")
+    async def menu(self, interaction: discord.Interaction):
+        logger.info(f"Menu command invoked by {interaction.user} in channel {interaction.channel}.")
+        
+        if not isinstance(interaction.channel, discord.Thread):
+            logger.warning("Menu command used outside of a thread.")
+            await interaction.response.send_message(CAN_ONLY_BE_USED_IN_THREAD, ephemeral=True)
+            return
+
+        if interaction.channel.parent_id != int(TICKET_CHANNEL_ID):
+            logger.warning("Menu command used in a thread not under the ticket channel.")
+            await interaction.response.send_message(CAN_ONLY_BE_USED_IN_THREAD, ephemeral=True)
+            return
+        
+        user = interaction.user
+        if not user.guild_permissions.kick_members:
+            await interaction.response.send_message("You don't have permission to access the management menu.", ephemeral=True)
+            return
+        
+        public_btn = Button(emoji="🧑", label="User menu", style=discord.ButtonStyle.primary)
+        private_btn = Button(emoji="⚒️", label="Management menu", style=SECONDARY)
+        
+        async def public_menu_callback(button_interaction: discord.Interaction):
+            async def cancel_callback(button_interaction: discord.Interaction):
+                await button_interaction.message.delete()
+            
+            view = PersistentCloseView(ticketcog=self, bot=self.bot)
+            cancel_btn = Button(emoji="❌", label="Abbrechen", style=SECONDARY)
+            cancel_btn.callback = cancel_callback
+            
+            view.add_item(cancel_btn)
+            channel = button_interaction.channel
+            await channel.send(view=view, content=f'Möchtest du das Ticket schließen? Dann Drücke bitte auf einen der Buttons. Sonst auf "Abbrechen"')
+        
+        async def private_menu_callback(button_interaction):
+            logger.info(f"Management menu selected by {button_interaction.user} in thread {button_interaction.channel}.")
+            embed = discord.Embed(
+                title="⚒️ Management Menu",
+                description="Verwende die Buttons unten, um das Ticket zu verwalten:",
+                color=0x5865F2
+            )
+            embed.add_field(
+                name=f"{LOCK_EMOJI} Close",
+                value="Benutze den Close Button um das Ticket zu schließen",
+                inline=False
+            )
+            embed.add_field(
+                name="🔐 Lock",
+                value="Benutze den Lock Button um es zu sperren (nur Mods können schreiben)",
+                inline=False
+            )
+            embed.add_field(
+                name="✏️ Rename",
+                value="Benutze den Rename Button um es zu renamen",
+                inline=False
+            )
+            embed.add_field(
+                name="📄 Transcript",
+                value="Benutze den Transcript Button um ein Transkript zu erstellen",
+                inline=False
+            )
+            
+            await button_interaction.response.send_message(embed=embed, view=TicketModMenu(ticketcog=self, bot=self.bot), ephemeral=True, delete_after=60)
+        
+        public_btn.callback = public_menu_callback
+        private_btn.callback = private_menu_callback
+        
+        menu_selection_view = discord.ui.View()
+        menu_selection_view.add_item(public_btn)
+        menu_selection_view.add_item(private_btn)
+        
+        await interaction.response.send_message(embed=simple_embed(f"Management Menu"), view=menu_selection_view, ephemeral=True, delete_after=60)
+        logger.info(f"Ticket menu selection sent to {interaction.user} in thread {interaction.channel}.")
+
     @commands.Cog.listener(name="THREAD_UPDATE")
     async def on_thread_update(self, before: discord.Thread, after: discord.Thread):
         guild = after.guild
@@ -200,4 +275,5 @@ class TicketCog(commands.Cog):
     async def cog_load(self):
         self.bot.tree.add_command(self.setup, guild=discord.Object(id=SYNC_SERVER))
         self.bot.tree.add_command(self.close, guild=discord.Object(id=SYNC_SERVER))
+        self.bot.tree.add_command(self.menu, guild=discord.Object(id=SYNC_SERVER))
         logger.info("TicketCog commands loaded to bot tree.")
