@@ -127,6 +127,7 @@ python src/main.py
 ### Ticket Commands
 - `/tickets` - Set up the ticket system (Admin only)
 - `/close` - Close a ticket (use in ticket threads)
+- `/menu` - Gives mods a useful management menu (Mods only)
 
 ### Other Commands
 - `/github` - GitHub-related commands
@@ -153,6 +154,7 @@ src/
 ├── constants.py            # Configuration constants
 ├── .env                    # Your .env
 ├── cogs/
+│   ├── art.py              # Just the file with ASCII art
 │   ├── music.py            # Music functionality
 │   ├── tickets.py          # Ticket system
 │   ├── github.py           # GitHub integration
@@ -164,6 +166,7 @@ src/
 ├── modals/
 │   └── ticketmodals.py     # Ticket forms
 ├── util/
+│   ├── ascii_arts.py       # Helping with arts
 │   ├── queue.py            # Music queue management
 │   ├── play_next.py        # Music playback logic
 │   └── ticket_creator.py   # Ticket creation utilities
