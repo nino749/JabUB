@@ -85,17 +85,30 @@ UNCHECK = "❌"
 ```
    - Create a `.env` file with this config:
 
-```python
-# Bot Token
-TOKEN = "your_discord_bot_token_here"
+   ```env
+   # Channels are always the channel ID. Role Names just as the name of the role, everything without ""
 
-# Server Configuration
-SYNC_SERVER = 123456789012345678  # Your server ID
-TICKET_CHANNEL_ID = "123456789012345678"  # Ticket channel ID
+   # The Bot token
+   DISCORD_TOKEN=your_bot_token_here
 
-# Channels
-i_channel = 123456789012345678  # Interaction channel ID (music)
-```
+   # The Server, the bot will sync its commands to
+   SERVER=your_server_id_here
+
+   # The interaction channel for music (#music or #musik)
+   I_CHANNEL=your_music_channel_id_here
+
+   # The transcript channel
+   TRANS_CHANNEL=your_transcript_channel_id_here
+
+   # Mod role name
+   MOD=Mod
+
+   # Trail mod role name
+   TRAIL_MOD=Trail_mod
+
+   # The channel where you can create tickets
+   TICKET_CHANNEL_ID=your_ticket_channel_id_here
+   ```
 
 5. **Run the bot**
 ```bash
@@ -138,6 +151,7 @@ The bot needs the following permissions in your Discord server:
 src/
 ├── main.py              # Main bot file
 ├── constants.py         # Configuration constants
+├── .env                 # Your .env
 ├── cogs/
 │   ├── music.py         # Music functionality
 │   ├── tickets.py       # Ticket system

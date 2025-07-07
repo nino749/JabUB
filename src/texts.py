@@ -237,3 +237,7 @@ CANSTEIN_NAME_PLACEHOLDER = get_text("CANSTEIN_NAME_PLACEHOLDER")
 
 TICKET_CLOSED_EMBED_TITLE = get_text("TICKET_CLOSED_EMBED_TITLE")
 TICKET_CLOSED_EMBED_DESC = get_text("TICKET_CLOSED_EMBED_DESC")
+
+NO_MEMBER = "> Fehler: Member wurde nicht gefunden."
+NO_PERMISSION = "> Du hast keine Berechtigung, diese Aktion auszuführen."
+SAME_VC = "> Du musst dich im selben Sprachkanal wie der Bot befinden, um diesen Befehl zu nutzen."

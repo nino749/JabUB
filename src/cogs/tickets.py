@@ -124,8 +124,8 @@ class TicketCog(commands.Cog):
     async def create_ticket_thread(self, interaction: discord.Interaction, fields: dict):
         global TICKET_CREATOR
         guild = interaction.guild
-        support_role = discord.utils.get(guild.roles, name=SUPPORT_ROLE_NAME)
-        supporthilfe_role = discord.utils.get(guild.roles, name=SUPPORTHILFE_ROLE_NAME)
+        support_role = discord.utils.get(guild.roles, name=MOD)
+        supporthilfe_role = discord.utils.get(guild.roles, name=TRAIL_MOD)
 
         try:
             title = fields.get("Title")

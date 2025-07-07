@@ -329,7 +329,7 @@ class CloseReasonConfirmView(View):
         for member in interaction.channel.members:
             guild_member = guild.get_member(member.id)
             logger.info(f"trying to remove users: {guild_member}")
-            has_required_role = any(role.name in [TEAM_ROLE, SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in guild_member.roles)
+            has_required_role = any(role.name in [TEAM_ROLE, MOD, TRAIL_MOD] for role in guild_member.roles)
 
             if not has_required_role:
                 logger.info(f"Removing user {guild_member} from ticket channel {interaction.channel}")
@@ -392,7 +392,7 @@ class CloseThreadView(View):
         logger.info(f"{interaction.user} clicked archive_button in {interaction.channel}")
         if not (
             interaction.user.guild_permissions.administrator or
-            any(role.name in [SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in interaction.user.roles)
+            any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles)
         ):
             logger.warning(f"{interaction.user} tried to archive ticket without permission in {interaction.channel}")
             await interaction.response.send_message(NO_PERMISSION, ephemeral=True, delete_after=20)
@@ -404,7 +404,7 @@ class CloseThreadView(View):
         logger.info(f"{interaction.user} clicked delete_button in {interaction.channel}")
         if not (
             interaction.user.guild_permissions.administrator or
-            any(role.name in [SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in interaction.user.roles)
+            any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles)
         ):
             logger.warning(f"{interaction.user} tried to delete ticket without permission in {interaction.channel}")
             await interaction.response.send_message(NO_PERMISSION, ephemeral=True, delete_after=20)
@@ -416,7 +416,7 @@ class CloseThreadView(View):
         logger.info(f"{interaction.user} clicked trans_button in {interaction.channel}")
         if not (
             interaction.user.guild_permissions.administrator or
-            any(role.name in [SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in interaction.user.roles)
+            any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles)
         ):
             logger.warning(f"{interaction.user} tried to transcribe ticket without permission in {interaction.channel}")
             await interaction.response.send_message(NO_PERMISSION, ephemeral=True, delete_after=20)
@@ -428,7 +428,7 @@ class CloseThreadView(View):
         logger.info(f"{interaction.user} clicked reopen_button in {interaction.channel}")
         if not (
             interaction.user.guild_permissions.administrator or
-            any(role.name in [SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in interaction.user.roles)
+            any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles)
         ):
             logger.warning(f"{interaction.user} tried to reopen ticket without permission in {interaction.channel}")
             await interaction.response.send_message(NO_PERMISSION, ephemeral=True, delete_after=20)
@@ -442,7 +442,7 @@ class CloseThreadView(View):
 
         TICKET_CREATOR = guild.get_member(TICKET_CREATOR_ID)
 
-        if not any(role.name in [SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in interaction.user.roles):
+        if not any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles):
             logger.warning(f"{interaction.user} tried to reopen ticket without support role in {interaction.channel}")
             await interaction.response.send_message(NO_PERMISSION, ephemeral=True, delete_after=20)
             return
@@ -502,7 +502,7 @@ class CloseConfirmView(View):
         
         for member in interaction.channel.members:
             guild_member = guild.get_member(member.id)
-            has_required_role = any(role.name in [TEAM_ROLE, SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in guild_member.roles)
+            has_required_role = any(role.name in [TEAM_ROLE, MOD, TRAIL_MOD] for role in guild_member.roles)
 
             if not has_required_role:
                 logger.info(f"Removing user {guild_member} from ticket channel {interaction.channel}")

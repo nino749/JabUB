@@ -16,7 +16,7 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
         return
 
     TICKET_CREATOR = guild.get_member(TICKET_CREATOR_ID)
-    if not any(role.name in [SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in interaction.user.roles):
+    if not any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles):
         await interaction.response.send_message("Du hast keine Berechtigung, um diese Aktion auszuführen.", ephemeral=True, delete_after=10)
         return
 

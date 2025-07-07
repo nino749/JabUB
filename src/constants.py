@@ -2,7 +2,7 @@ import discord
 from dotenv import dotenv_values
 
 #
-# Support members need the permisson to manage Threads.
+# Mods need the permisson to manage Threads.
 #
 
 #---------------------------------------------------------------------------------------------#
@@ -23,8 +23,8 @@ SYNC_SERVER = _config.get('SERVER')
 I_CHANNEL = _config.get('I_CHANNEL')
 TRANS_CHANNEL_ID = _config.get('TRANS_CHANNEL')
 TEAM_ROLE = _config.get('TEAM_ROLE')
-SUPPORT_ROLE_NAME = _config.get('SUPPORT_ROLE_NAME')
-SUPPORTHILFE_ROLE_NAME = _config.get('SUPPORTHILFE_ROLE_NAME')
+MOD = _config.get('MOD')
+TRAIL_MOD = _config.get('TRAIL_MOD')
 TICKET_CREATOR_FILE = "config/tickets.json"
 
 # Emojis for the bot
@@ -62,11 +62,6 @@ YT_OPTS = {
         'preferredquality': '128',
     }]
 }
-
-# Language
-NO_MEMBER = "> Fehler: Member wurde nicht gefunden."
-NO_PERMISSION = "> Du hast keine Berechtigung, diese Aktion auszuführen."
-SAME_VC = "> Du musst dich im selben Sprachkanal wie der Bot befinden, um diesen Befehl zu nutzen."
 
 # Embed
 EMBED_FOOTER = "JabUB.css | by www.ninoio.gay"
