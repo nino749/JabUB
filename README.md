@@ -43,7 +43,7 @@ A feature-rich Discord bot built with Python and discord.py, offering music play
 
 1. **Clone the repository**
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/ninocss/JabUB/
 cd jabub-discord-bot
 ```
 
