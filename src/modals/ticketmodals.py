@@ -59,8 +59,8 @@ class closeThreadReasonModal(Modal):
         self.reason_TextInput = TextInput(
             label=CLOSE_REASON_LABEL,
             placeholder=CLOSE_REASON_PLACEHOLDER,
-            style=discord.TextStyle.short,
-            max_length=200
+            style=discord.TextStyle.long,
+            max_length=300
         )
         self.add_item(self.reason_TextInput)
         
@@ -95,6 +95,8 @@ class bereichModal(Modal):
             "Welt": self.welt.value,
             "message": DEFAULT_HELP_MESSAGE
         }
+        print(f"ticketcog type: {type(self.ticketcog)}")
+        print(f"Has create_ticket_thread: {hasattr(self.ticketcog, 'create_ticket_thread')}")
         await self.ticketcog.create_ticket_thread(interaction=interaction, fields=fields)
 
 # Get the coordinates of the plot

@@ -66,24 +66,24 @@ class TicketCog(commands.Cog):
             color=0x5865F2
         )
         embed.set_author(
-            name="🎟️ Tickets System", 
+            name="JabUB", 
             icon_url=interaction.client.user.avatar.url if interaction.client.user.avatar else None
         )
 
         embed.add_field(
-            name=f"❓ {WHAT_NEXT}", 
-            value=f"👇 {WHAT_NEXT_VALUE}", 
+            name=f"{WHAT_NEXT}", 
+            value=f"{WHAT_NEXT_VALUE}", 
             inline=False
         )
         embed.set_footer(
-            text=f"🔥 {EMBED_FOOTER}",
+            text=f"❤️ {EMBED_FOOTER}",
             icon_url=interaction.guild.icon.url if interaction.guild.icon else None
         )
 
         embed.set_thumbnail(url=interaction.guild.icon.url if interaction.guild.icon else None)
         embed.timestamp = discord.utils.utcnow()
         
-        await interaction.channel.send(embed=embed, view=TicketSetupView(interaction))
+        await interaction.channel.send(embed=embed, view=TicketSetupView(self))
         logger.info(f"Ticket setup embed sent by {interaction.user} in channel {interaction.channel}.")
 
     @app_commands.command(name="close", description="Lets you close the ticket")
@@ -143,11 +143,11 @@ class TicketCog(commands.Cog):
                 color=0x00D166
             )
             embed.set_footer(
-                text=f"🔥 {EMBED_FOOTER}",
+                text=f"❤️ {EMBED_FOOTER}",
                 icon_url=interaction.guild.icon.url if interaction.guild.icon else None
             )
             embed.set_author(
-                name=f"👤 {interaction.user.name}", 
+                name=f"{interaction.user.name}", 
                 icon_url=interaction.user.avatar.url if interaction.user.avatar else None
             )
 
@@ -166,7 +166,7 @@ class TicketCog(commands.Cog):
                     embed.add_field(name=f"{emoji} {name}", value=f"```{value}```", inline=False)
 
             message = fields.get("message", DEFAULT_HELP_MESSAGE)
-
+            
             await thread.send(
                 embed=embed,
                 view=PersistentCloseView(bot=self.bot, ticketcog=self),
@@ -188,7 +188,7 @@ class TicketCog(commands.Cog):
             logger.info(f"Thread {after.name} archived. Checking members for removal.")
             for member in after.members:
                 guild_member = guild.get_member(member.id)
-                has_required_role = any(role.name in [TEAM_ROLE, SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in guild_member.roles)
+                has_required_role = guild_member.guild_permissions.kick_members
 
                 if not has_required_role:
                     await after.send(view=None, content=TICKET_CLOSED_TIMEOUT)

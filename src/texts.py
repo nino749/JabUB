@@ -11,14 +11,14 @@ TEXTS_DE = {
     "ENGLISH": "🇬🇧 Englisch",
     "SUPPORT_HEADER_TEXT": "🎫 Support",
     "EMBED_CREATED": "Embed wurde gesendet",
-    "TICKET_CREATION_EMBED_TEXT": "Hast du Fragen oder möchtest du etwas anmerken? Öffne jetzt ein **Support-Ticket**, um Kontakt mit unserem Team aufzunehmen. Es wird so schnell es geht jemand antworten. Du brauchst niemanden vom Team anzupingen.",
+    "TICKET_CREATION_EMBED_TEXT": "Hast du Fragen oder möchtest etwas anmerken? Öffne jetzt ein **Support-Ticket**, um Kontakt mit unserem Team aufzunehmen. Es wird so schnell es geht jemand antworten. Du brauchst niemanden vom Team anzupingen.",
     "WHAT_NEXT": "Was als nächstes?",
     "WHAT_NEXT_VALUE": 'Wähle eine **Kategorie** aus dem **Drop-Down Menü** aus, um weitere Informationen zu erhalten und um dein **Ticket anzupassen**.',
     
     # Error Messages
     "NO_PERMISSION": "Du hast keine Berechtigung für diesen Befehl.",
     "CAN_ONLY_BE_USED_IN_THREAD": "Dieser Befehl kann nur in einem Ticket-Thread verwendet werden.",
-    "NO_MEMBER": "Error, member wurde nicht gefunden.",
+    "NO_MEMBER": "Fehler: Der Member existiert nicht.",
     "MEMBER_NOT_FOUND": "Fehler: Der Member konnte nicht gefunden werden.",
     
     # Close Embed
@@ -68,7 +68,7 @@ TEXTS_DE = {
     # Ticket Category Messages
     "GENERAL_DISCORD_HELP": "Wie können wir dir helfen? Was ist dein Anliegen?",
     "GENERAL_MINECRAFT_HELP": "Wie können wir dir helfen? Was ist dein Anliegen?",
-    "UNBAN_REQUEST_MESSAGE": "Schreibe nun dein Entbannungs-Antrag. Wir werden intern darüber abstimmen und uns bei dir hier melden.",
+    "UNBAN_REQUEST_MESSAGE": "Schreibe nun dein Entbannungs-Antrag. Wir werden ihn intern besprechen und uns bei dir hier melden.",
     "OTHER_HELP": "Wie können wir dir helfen? Was ist dein Anliegen?",
     
     # Modal Titles and Labels
@@ -96,8 +96,8 @@ TEXTS_DE = {
     "PLOT_TRANSFER_TITLE": "Parzelle übertragen",
     "INGAME_NAME_LABEL": "Ingame Name",
     "INGAME_NAME_PLACEHOLDER": "Der Name deines Minecraft Accounts",
-    "CANSTEIN_NAME_LABEL": "Canstein Name",
-    "CANSTEIN_NAME_PLACEHOLDER": "Der Name des benutzten Canstein Accounts",
+    "CANSTEIN_NAME_LABEL": "Canstein Nummer",
+    "CANSTEIN_NAME_PLACEHOLDER": "Die Nummer des benutzten Canstein Accounts",
     
     # Embed Titles and Descriptions
     "TICKET_CLOSED_EMBED_TITLE": "Ticket geschlossen - {channel_name}",
@@ -121,7 +121,7 @@ TEXTS_DE = {
     "TITLE_SONSTIGES": "Sonstiges",
     
     "MESSAGE_GENERAL": "Wie können wir dir helfen? Was ist dein Anliegen?",
-    "MESSAGE_ENTBANNUNG": "Schreibe nun dein Entbannungs-Antrag. Wir werden intern darüber abstimmen und uns bei dir hier melden."
+    "MESSAGE_ENTBANNUNG": "Schreibe nun dein Entbannungs-Antrag. Wir werden ihn intern besprechen und uns bei dir hier melden."
 }
 
 # Function to get text based on current language

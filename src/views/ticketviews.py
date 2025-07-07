@@ -328,6 +328,7 @@ class CloseReasonConfirmView(View):
         
         for member in interaction.channel.members:
             guild_member = guild.get_member(member.id)
+            logger.info(f"trying to remove users: {guild_member}")
             has_required_role = any(role.name in [TEAM_ROLE, SUPPORT_ROLE_NAME, SUPPORTHILFE_ROLE_NAME] for role in guild_member.roles)
 
             if not has_required_role:
@@ -568,6 +569,10 @@ class TicketDropdown(discord.ui.Select):
         
     async def callback(self, interaction: discord.Interaction):
         logger.info(f"{interaction.user} selected '{self.values[0]}' in TicketDropdown in {interaction.channel}")
+        
+        parent_view = self.view
+        self.placeholder = PLACEHOLDER_TEXT
+        
         if self.values[0] == "discord":
             fields = {
                 "Title": TITLE_DISCORD,
@@ -602,6 +607,11 @@ class TicketDropdown(discord.ui.Select):
                 "message": MESSAGE_GENERAL
             }
             await self.ticketcog.create_ticket_thread(interaction=interaction, fields=fields)
+        
+        if interaction.response.is_done():
+            await interaction.followup.edit_message(message_id=interaction.message.id, view=parent_view)
+        else: 
+            await interaction.response.edit_message(view=parent_view)
 
 # The delete confirmation view
 class DeleteConfirmView(View):
