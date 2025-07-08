@@ -64,4 +64,4 @@ YT_OPTS = {
 }
 
 # Embed
-EMBED_FOOTER = "JabUB.css | by www.ninoio.gay"
+EMBED_FOOTER = "❤️ JabUB.css | by nino.css"

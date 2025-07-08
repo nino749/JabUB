@@ -14,6 +14,123 @@ if TYPE_CHECKING:
     from cogs.tickets import TicketCog
     from cogs.music import MusicCog
 
+async def closeTicket(self, interaction: discord.Interaction):
+    guild = interaction.guild
+    TICKET_CREATOR_ID = get_ticket_creator(interaction.channel.id) 
+    if TICKET_CREATOR_ID is None:
+        logger.warning(f"Ticket creator ID not found for channel {interaction.channel.id}")
+        embed = discord.Embed(
+            title="❌ Fehler",
+            description="Error, member wurde nicht gefunden.",
+            color=0xff0000
+        )
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+        return
+
+    TICKET_CREATOR = guild.get_member(TICKET_CREATOR_ID)
+
+    if TICKET_CREATOR is None:
+        logger.warning(f"Ticket creator not found in guild for ID {TICKET_CREATOR_ID}")
+        embed = discord.Embed(
+            title="❌ Fehler",
+            description="Fehler: Der Member konnte nicht gefunden werden.",
+            color=0xff0000
+        )
+        
+    for member in interaction.channel.members:
+        guild_member = guild.get_member(member.id)
+        if guild_member is None:
+            continue
+            
+        has_required_role = any(role.name in [TEAM_ROLE, MOD, TRAIL_MOD] for role in guild_member.roles)
+
+        if not has_required_role:
+            logger.info(f"Removing user {guild_member} from ticket channel {interaction.channel}")
+            await interaction.channel.remove_user(guild_member)
+            await asyncio.sleep(0.5)
+
+            if SEND_TICKET_FEEDBACK is True:                
+                embed = discord.Embed(
+                    title=f"{LOCK_EMOJI} Ticket geschlossen - {interaction.channel.name}",
+                    description=f"**Geschlossen von:** {interaction.user.mention}\n**Grund:** Keine Angabe\n**Server:** {interaction.guild.name}",
+                    color=0xff0000
+                )
+                embed.set_thumbnail(url=interaction.guild.icon)
+                embed.set_author(name=interaction.user.name, icon_url=interaction.user.avatar.url if interaction.user.avatar else None)
+                embed.set_footer(text=EMBED_FOOTER)
+                embed.timestamp = discord.utils.utcnow()
+                logger.info(f"Sending closed ticket embed to {guild_member}")
+                await guild_member.send(embed=embed)
+        else:
+            logger.debug(f"User {guild_member} has required role, not removing from ticket channel")
+        
+    if not interaction.channel.name.startswith("[CLOSED] "):
+        close_embed = discord.Embed(
+            title="🔒 Ticket geschlossen",
+            description=f"Ticket geschlossen von {interaction.user.mention}.",
+            color=0xff0000
+        )
+        close_embed.add_field(
+            name="📊 Ticket Information",
+            value=f"**Channel:** {interaction.channel.name}\n**Closed at:** <t:{int(discord.utils.utcnow().timestamp())}:F>",
+            inline=False
+        )
+        close_embed.add_field(
+            name="👤 Closed by",
+            value=f"{interaction.user.mention}",
+            inline=True
+        )
+        if TICKET_CREATOR:
+            close_embed.add_field(
+                name="🎫 Original Creator",
+                value=f"{TICKET_CREATOR.mention}",
+                inline=True
+            )
+        
+        message_count = 0
+        member_count = len(interaction.channel.members)
+        try:
+            async for _ in interaction.channel.history(limit=None):
+                message_count += 1
+        except:
+            message_count = "Unknown"
+        
+        close_embed.add_field(
+            name="📈 Channel Statistics",
+            value=f"**Messages:** {message_count}\n**Members:** {member_count}\n**Created:** <t:{int(interaction.channel.created_at.timestamp())}:R>",
+            inline=True
+        )
+        
+        support_members = []
+        for member in interaction.channel.members:
+            guild_member = interaction.guild.get_member(member.id)
+            if guild_member and any(role.name in [TEAM_ROLE, MOD, TRAIL_MOD] for role in guild_member.roles):
+                support_members.append(guild_member)
+                
+        if support_members:
+            support_list = ", ".join([member.mention for member in support_members[:3]])
+            if len(support_members) > 3:
+                support_list += f" +{len(support_members) - 3} more"
+            close_embed.add_field(
+                name="🛠️ Support Team",
+                value=support_list,
+                inline=False
+            )
+        try:
+            logger.info(f"Renaming channel {interaction.channel} to closed")
+            await interaction.channel.edit(name=f"[CLOSED] {interaction.channel.name}")
+            await asyncio.sleep(0.5)
+
+            await interaction.channel.send(embed=close_embed, view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot))
+        except discord.HTTPException as e:
+            logger.error(f"HTTPException while closing ticket: {e}")
+            if e.status == 429:
+                await asyncio.sleep(e.retry_after if hasattr(e, 'retry_after') else 1)
+                await interaction.channel.edit(name=f"[CLOSED] {interaction.channel.name}")
+                await asyncio.sleep(0.5)
+                await interaction.channel.send(embed=close_embed, view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot))
+            else:
+                await interaction.channel.send(embed=close_embed, view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot))
     
 # Setup colored logging
 handler = colorlog.StreamHandler()
@@ -74,7 +191,12 @@ class ActionsView(View):
         history = await self.get_history(interaction)
         
         if not history:
-            await interaction.followup.send("No song history found!", ephemeral=True)
+            embed = discord.Embed(
+                title="❌ No History Found",
+                description="No song history found!",
+                color=0xff0000
+            )
+            await interaction.followup.send(embed=embed, ephemeral=True)
             return
         
         song_counts = {}
@@ -113,7 +235,7 @@ class ActionsView(View):
             super().__init__(timeout=300)
             self.bot = bot
             
-            for i, (song, count) in enumerate(top_songs):
+            for i, (song, _) in enumerate(top_songs):
                 display_name = song[:30] + "..." if len(song) > 30 else song
                 rank_emoji = "🥇" if i == 0 else "🥈" if i == 1 else "🥉"
                 
@@ -131,7 +253,12 @@ class ActionsView(View):
                 if music_cog:
                     await music_cog.mostplayed_callback(interaction, song)
                 else:
-                    await interaction.response.send_message("Music cog not found!", ephemeral=True)
+                    embed = discord.Embed(
+                        title="❌ Error",
+                        description="Music cog not found!",
+                        color=0xff0000
+                    )
+                    await interaction.response.send_message(embed=embed, ephemeral=True)
             return play_callback
         
     async def get_history(self, interaction) -> list:
@@ -172,20 +299,35 @@ class ActionsView(View):
         if music_cog:
             await music_cog.insipre_me(interaction)
         else:
-            await interaction.followup.send("Music cog not found!", ephemeral=True)
+            embed = discord.Embed(
+                title="❌ Error",
+                description="Music cog not found!",
+                color=0xff0000
+            )
+            await interaction.followup.send(embed=embed, ephemeral=True)
 
     async def charts_song(self, interaction):
         music_cog: "MusicCog" = self.bot.get_cog("MusicCog")
         if music_cog:
             await music_cog.play_chart.callback(music_cog, interaction)
         else:
-            await interaction.followup.send("Music cog not found!", ephemeral=True)
+            embed = discord.Embed(
+                title="❌ Error",
+                description="Music cog not found!",
+                color=0xff0000
+            )
+            await interaction.followup.send(embed=embed, ephemeral=True)
             
     async def history_call(self, interaction: discord.Interaction):
         current_history = await self.get_history(interaction=interaction)
         
         if not current_history:
-            await interaction.followup.send("No song history found!", ephemeral=True)
+            embed = discord.Embed(
+                title="❌ No History Found",
+                description="No song history found!",
+                color=0xff0000
+            )
+            await interaction.followup.send(embed=embed, ephemeral=True)
             return
         
         page_size = 10
@@ -265,7 +407,7 @@ class PersistentCloseView(View):
         close_btn = Button(label="Ticket schließen", style=DANGER, emoji=LOCK_EMOJI, custom_id="close_ticket_button")
         close_btn.callback = self.close_button
         
-        close_reason_btn = Button(label="Ticket mit Grund schließen", style=DANGER, emoji=LOCK_W_REASON_EMOJI, custom_id="close_ticket_button_reason")
+        close_reason_btn = Button(label="Ticket mit Grund schließen", style=SECONDARY, emoji=LOCK_W_REASON_EMOJI, custom_id="close_ticket_button_reason")
         close_reason_btn.callback = self.close_button_with_reason
         
         self.add_item(close_btn)
@@ -273,7 +415,12 @@ class PersistentCloseView(View):
     
     async def close_button(self, interaction: discord.Interaction):
         logger.info(f"{interaction.user} clicked close_button in {interaction.channel}")
-        await interaction.response.send_message(view=CloseConfirmView(ticketcog=self.ticketcog, bot=self.bot), content=f"> {interaction.user.mention} Bist du dir sicher, dass du das Ticket schließen möchtest?")
+        embed = discord.Embed(
+            title="🔒 Ticket schließen",
+            description=f"{interaction.user.mention} Bist du dir sicher, dass du das Ticket schließen möchtest?",
+            color=0xffa500
+        )
+        await interaction.response.send_message(embed=embed, view=CloseConfirmView(ticketcog=self.ticketcog, bot=self.bot))
     
     async def close_button_with_reason(self, interaction: discord.Interaction):
         logger.info(f"{interaction.user} clicked close_button_with_reason in {interaction.channel}")
@@ -343,27 +490,99 @@ class CloseReasonConfirmView(View):
                 logger.debug(f"User {guild_member} has required role, not removing from ticket channel")
             
         if not interaction.channel.name.startswith("[CLOSED] "):
+            close_embed = discord.Embed(
+                title="🔒 Ticket geschlossen",
+                description=f"Ticket geschlossen von {interaction.user.mention} aus folgendem Grund:\n```{reason}```",
+                color=0xff0000
+            )
+            close_embed.add_field(
+                name="📊 Ticket Information",
+                value=f"**Channel:** {interaction.channel.name}\n**Closed at:** <t:{int(discord.utils.utcnow().timestamp())}:F>\n**Channel ID:** {interaction.channel.id}",
+                inline=False
+            )
+            close_embed.add_field(
+                name="👤 Closed by",
+                value=f"{interaction.user.mention}",
+                inline=True
+            )
+            if TICKET_CREATOR:
+                close_embed.add_field(
+                    name="🎫 Original Creator",
+                    value=f"{TICKET_CREATOR.mention}",
+                    inline=True
+                )
+            
+            message_count = 0
+            member_count = len(interaction.channel.members)
+            try:
+                async for _ in interaction.channel.history(limit=None):
+                    message_count += 1
+            except:
+                message_count = "Unknown"
+            
+            close_embed.add_field(
+                name="📈 Channel Statistics",
+                value=f"**Messages:** {message_count}\n**Members:** {member_count}\n**Created:** <t:{int(interaction.channel.created_at.timestamp())}:R>",
+                inline=True
+            )
+            
+            support_members = []
+            message_authors = set()
+            try:
+                async for message in interaction.channel.history(limit=None):
+                    if message.author.id != self.bot.user.id:
+                        message_authors.add(message.author.id)
+            except:
+                pass
+            
+            for member in interaction.channel.members:
+                guild_member = guild.get_member(member.id)
+                if (guild_member and 
+                    any(role.name in [TEAM_ROLE, MOD, TRAIL_MOD] for role in guild_member.roles) and
+                    guild_member.id in message_authors):
+                    support_members.append(guild_member)
+            
+            support_members = []
+            for member in interaction.channel.members:
+                guild_member = interaction.guild.get_member(member.id)
+                if guild_member and any(role.name in [TEAM_ROLE, MOD, TRAIL_MOD] for role in guild_member.roles):
+                    support_members.append(guild_member)
+                    
+            if support_members:
+                support_list = ", ".join([member.mention for member in support_members[:3]])
+                if len(support_members) > 3:
+                    support_list += f" +{len(support_members) - 3} more"
+                close_embed.add_field(
+                    name="🛠️ Support Team",
+                    value=support_list,
+                    inline=False
+                )
+                
             try:
                 logger.info(f"Renaming channel {interaction.channel} to closed")
                 await interaction.channel.edit(name=f"[CLOSED] {interaction.channel.name}")
                 await asyncio.sleep(0.5)
+
+                close_embed.set_thumbnail(url=interaction.guild.icon.url if interaction.guild.icon else None)
+                close_embed.set_footer(text=f"{EMBED_FOOTER}", icon_url=interaction.user.display_avatar.url)
+                close_embed.timestamp = discord.utils.utcnow()
                 
-                await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})* aus folgendem Grund:\n ```{reason}```")
+                await interaction.channel.send(embed=close_embed, view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot))
             except discord.HTTPException as e:
                 logger.error(f"HTTPException while closing ticket: {e}")
                 if e.status == 429:
                     await asyncio.sleep(e.retry_after if hasattr(e, 'retry_after') else 1)
                     await interaction.channel.edit(name=f"[CLOSED] {interaction.channel.name}")
                     await asyncio.sleep(0.5)
-                    await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})* aus folgendem Grund:\n```{reason}```")
+                    await interaction.channel.send(embed=close_embed, view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot))
                 else:
-                    await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})* aus folgendem Grund:\n```{reason}```")
+                    await interaction.channel.send(embed=close_embed, view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot))
 
     async def no_button(self, interaction: discord.Interaction):
         logger.info(f"{interaction.user} cancelled closing ticket with reason in {interaction.channel}")
         await interaction.message.delete()
 
-# The close view, if you close a ticket
+# The close view, if you closed a ticket
 class CloseThreadView(View):
     def __init__(self, bot, ticketcog: "TicketCog"):
         super().__init__(timeout=None)
@@ -395,7 +614,12 @@ class CloseThreadView(View):
             any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles)
         ):
             logger.warning(f"{interaction.user} tried to archive ticket without permission in {interaction.channel}")
-            await interaction.response.send_message(NO_PERMISSION, ephemeral=True, delete_after=20)
+            embed = discord.Embed(
+                title="❌ Keine Berechtigung",
+                description=NO_PERMISSION,
+                color=0xff0000
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True, delete_after=20)
             return
         
         await interaction.response.send_modal(ThreadModalRename())
@@ -407,10 +631,20 @@ class CloseThreadView(View):
             any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles)
         ):
             logger.warning(f"{interaction.user} tried to delete ticket without permission in {interaction.channel}")
-            await interaction.response.send_message(NO_PERMISSION, ephemeral=True, delete_after=20)
+            embed = discord.Embed(
+                title="❌ Keine Berechtigung",
+                description=NO_PERMISSION,
+                color=0xff0000
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True, delete_after=20)
             return
 
-        await interaction.response.send_message(view=DeleteConfirmView(ticketcog=self.ticketcog), content=f"> {interaction.user.mention} Möchtest du dieses Ticket wirklich löschen?")
+        embed = discord.Embed(
+            title="🗑️ Ticket löschen",
+            description=f"{interaction.user.mention} Möchtest du dieses Ticket wirklich löschen?",
+            color=0xff0000
+        )
+        await interaction.response.send_message(embed=embed, view=DeleteConfirmView(ticketcog=self.ticketcog))
         
     async def trans_button(self, interaction: discord.Interaction):
         logger.info(f"{interaction.user} clicked trans_button in {interaction.channel}")
@@ -419,7 +653,12 @@ class CloseThreadView(View):
             any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles)
         ):
             logger.warning(f"{interaction.user} tried to transcribe ticket without permission in {interaction.channel}")
-            await interaction.response.send_message(NO_PERMISSION, ephemeral=True, delete_after=20)
+            embed = discord.Embed(
+                title="❌ Keine Berechtigung",
+                description=NO_PERMISSION,
+                color=0xff0000
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True, delete_after=20)
             return
         
         await interaction.response.send_modal(TransDesc(bot=self.bot))
@@ -431,41 +670,71 @@ class CloseThreadView(View):
             any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles)
         ):
             logger.warning(f"{interaction.user} tried to reopen ticket without permission in {interaction.channel}")
-            await interaction.response.send_message(NO_PERMISSION, ephemeral=True, delete_after=20)
+            embed = discord.Embed(
+                title="❌ Keine Berechtigung",
+                description=NO_PERMISSION,
+                color=0xff0000
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True, delete_after=20)
             return
         guild = interaction.guild
         TICKET_CREATOR_ID = get_ticket_creator(interaction.channel.id) 
         if TICKET_CREATOR_ID is None:
             logger.warning(f"Ticket creator ID not found for channel {interaction.channel.id} on reopen")
-            await interaction.response.send_message(NO_MEMBER, ephemeral=True)
+            embed = discord.Embed(
+                title="❌ Member nicht gefunden",
+                description=NO_MEMBER,
+                color=0xff0000
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
         TICKET_CREATOR = guild.get_member(TICKET_CREATOR_ID)
 
         if not any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles):
             logger.warning(f"{interaction.user} tried to reopen ticket without support role in {interaction.channel}")
-            await interaction.response.send_message(NO_PERMISSION, ephemeral=True, delete_after=20)
+            embed = discord.Embed(
+                title="❌ Keine Berechtigung",
+                description=NO_PERMISSION,
+                color=0xff0000
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True, delete_after=20)
             return
-
+        
         if isinstance(interaction.channel, discord.Thread):
+            bot_messages = []
             async for message in interaction.channel.history(limit=None):
-                if message.content.startswith("> ") and message.author == interaction.client.user:
+                if message.author == interaction.client.user and message.embeds:
+                    bot_messages.append(message)
+                
+                for message in bot_messages[1:]:
                     try:
                         await message.delete()
-                        logger.debug(f"Deleted setup message in {interaction.channel}")
+                        logger.debug(f"Deleted bot embed message in {interaction.channel}")
                     except Exception as e:
-                        logger.error(f"Error deleting setup message: {e}")
+                        logger.error(f"Error deleting bot embed message: {e}")
+                        
+                current_channel_name = interaction.channel.name
+                if current_channel_name.startswith("[CLOSED] "):
+                    current_channel_name = current_channel_name[9:]
                     
-            current_channel_name = interaction.channel.name
-            if current_channel_name.startswith("[CLOSED] "):
-                current_channel_name = current_channel_name[9:]
+                await interaction.channel.edit(name=current_channel_name)
+                embed = discord.Embed(
+                title="✅ Setup abgeschlossen",
+                description="Alle setup Nachrichten im Ticket wurden gelöscht.",
+                color=0x00ff00
+                )
+                await interaction.followup.send_message(embed=embed, ephemeral=True, delete_after=20)
                 
-            await interaction.channel.edit(name=current_channel_name)
-            await interaction.response.send_message("> Alle setup Nachrichten im Ticket wurden gelöscht.", ephemeral=True, delete_after=20)
-            
-            await asyncio.sleep(0.5)
-            await interaction.channel.add_user(TICKET_CREATOR)
-            await interaction.channel.send(f"> {TICKET_CREATOR.mention} Das Ticket wurde neu eröffnet.")
+                await asyncio.sleep(0.5)
+                await interaction.channel.add_user(TICKET_CREATOR)
+                
+                reopen_embed = discord.Embed(
+                title="🔓 Ticket neu eröffnet",
+                description=f"{TICKET_CREATOR.mention} Das Ticket wurde neu eröffnet.",
+                color=0x00ff00
+                )
+                await interaction.channel.send(embed=reopen_embed)
      
 # The view, where you can deside between "yes" and "no"
 class CloseConfirmView(View):
@@ -486,61 +755,7 @@ class CloseConfirmView(View):
     async def yes_button(self, interaction: discord.Interaction):
         logger.info(f"{interaction.user} confirmed closing ticket without reason in {interaction.channel}")
         await interaction.message.delete()
-        guild = interaction.guild
-        TICKET_CREATOR_ID = get_ticket_creator(interaction.channel.id) 
-        if TICKET_CREATOR_ID is None:
-            logger.warning(f"Ticket creator ID not found for channel {interaction.channel.id}")
-            await interaction.response.send_message("Error, member wurde nicht gefunden.", ephemeral=True)
-            return
-
-        TICKET_CREATOR = guild.get_member(TICKET_CREATOR_ID)
-
-        if TICKET_CREATOR is None:
-            logger.warning(f"Ticket creator not found in guild for ID {TICKET_CREATOR_ID}")
-            await interaction.response.send_message("Fehler: Der Member konnte nicht gefunden werden.", ephemeral=True)
-            return
-        
-        for member in interaction.channel.members:
-            guild_member = guild.get_member(member.id)
-            has_required_role = any(role.name in [TEAM_ROLE, MOD, TRAIL_MOD] for role in guild_member.roles)
-
-            if not has_required_role:
-                logger.info(f"Removing user {guild_member} from ticket channel {interaction.channel}")
-                await interaction.channel.remove_user(guild_member)
-                await asyncio.sleep(0.5)
-                
-                embed = discord.Embed(
-                    title=f"{LOCK_EMOJI} Ticket geschlossen - {interaction.channel.name}",
-                    description=f"**Geschlossen von:** {interaction.user.mention}\n**Grund:** Keine Angabe\n**Server:** {interaction.guild.name}",
-                    color=0xff0000
-                )
-                embed.set_thumbnail(url=interaction.guild.icon)
-                embed.set_author(name=interaction.user.name, icon_url=interaction.user.avatar.url if interaction.user.avatar else None)
-                embed.set_footer(text=EMBED_FOOTER)
-                embed.timestamp = discord.utils.utcnow()
-                
-                if SEND_TICKET_FEEDBACK is True:
-                    logger.info(f"Sending closed ticket embed to {guild_member}")
-                    await guild_member.send(embed=embed)
-            else:
-                logger.debug(f"User {guild_member} has required role, not removing from ticket channel")
-            
-        if not interaction.channel.name.startswith("[CLOSED] "):
-            try:
-                logger.info(f"Renaming channel {interaction.channel} to closed")
-                await interaction.channel.edit(name=f"[CLOSED] {interaction.channel.name}")
-                await asyncio.sleep(0.5)
-                
-                await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})*.")
-            except discord.HTTPException as e:
-                logger.error(f"HTTPException while closing ticket: {e}")
-                if e.status == 429:
-                    await asyncio.sleep(e.retry_after if hasattr(e, 'retry_after') else 1)
-                    await interaction.channel.edit(name=f"[CLOSED] {interaction.channel.name}")
-                    await asyncio.sleep(0.5)
-                    await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})*.")
-                else:
-                    await interaction.channel.send(view=CloseThreadView(ticketcog=self.ticketcog, bot=self.bot), content=f"> Ticket geschlossen von **{interaction.user.display_name}** *({interaction.user.name})*.")
+        await closeTicket(self, interaction=interaction)
     
     async def no_button(self, interaction: discord.Interaction):
         logger.info(f"{interaction.user} cancelled closing ticket without reason in {interaction.channel}")
@@ -629,8 +844,13 @@ class DeleteConfirmView(View):
         self.add_item(no_button)
         
     async def yes_button(self, interaction: discord.Interaction):
+        embed = discord.Embed(
+            title="🗑️ Deleting Ticket",
+            description=f"This ticket is being deleted {LOADING_EMOJI}",
+            color=0xff0000
+        )
+        await interaction.response.send_message(embed=embed)
         logger.info(f"{interaction.user} confirmed deleting ticket in {interaction.channel}")
-        await interaction.channel.edit(name="[DELETING]")
         delete_ticket_creator(interaction.channel.id)
         await interaction.channel.delete()
         
@@ -653,16 +873,31 @@ class RenameThreadModal(discord.ui.Modal, title="Rename Thread"):
         new_name = self.name_input.value.strip()
         
         if not new_name:
-            await interaction.response.send_message("❌ Thread name cannot be empty!", ephemeral=True)
+            embed = discord.Embed(
+                title="❌ Fehler",
+                description="Thread name cannot be empty!",
+                color=0xff0000
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
             
         try:
             await interaction.channel.edit(name=new_name)
             logger.info(f"Thread renamed to '{new_name}' by {interaction.user} in {interaction.channel}")
-            await interaction.response.send_message(f"✅ Thread renamed to: **{new_name}**", ephemeral=True)
+            embed = discord.Embed(
+                title="✅ Thread umbenannt",
+                description=f"Thread renamed to: **{new_name}**",
+                color=0x00ff00
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
         except discord.HTTPException as e:
             logger.error(f"Failed to rename thread: {e}")
-            await interaction.response.send_message(f"❌ Failed to rename thread: {str(e)}", ephemeral=True)
+            embed = discord.Embed(
+                title="❌ Fehler",
+                description=f"Failed to rename thread: {str(e)}",
+                color=0xff0000
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
 class RenameThread():
     def __init__(self):
@@ -698,13 +933,23 @@ class TicketModMenu(View):
         await interaction.response.send_modal(TransDesc(bot=self.bot))
         
     async def close_callback(self, interaction: discord.Interaction):
-        await interaction.response.send_message(view=CloseConfirmView(bot=self.ticketcog.bot, ticketcog=self.ticketcog), content=f"> {interaction.user.mention} Bist du dir sicher, dass du das Ticket schließen möchtest?")
+        embed = discord.Embed(
+            title="🔒 Ticket wird geschlossen",
+            description=f"Schließe das Ticket {LOADING_EMOJI}",
+            color=0xffa500
+        )
+        await interaction.response.send_message(embed=embed, ephemeral=True, delete_after=5)
+        await closeTicket(self, interaction=interaction)
         
     async def lock_callback(self, interaction):
         await interaction.channel.edit(locked=True)
-        await interaction.response.send_message(f"🔐 Thread locked by {interaction.user.mention}", ephemeral=False)
+        embed = discord.Embed(
+            title="🔐 Thread gesperrt",
+            description=f"Thread locked by {interaction.user.mention}",
+            color=0x800080
+        )
+        await interaction.response.send_message(embed=embed, ephemeral=False)
 
     async def rename_callback(self, interaction):
         rename_thread = RenameThread()
         await rename_thread.show_rename_modal(interaction)
-        

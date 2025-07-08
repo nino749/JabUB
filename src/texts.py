@@ -58,10 +58,10 @@ TEXTS_DE = {
     
     # Dropdown Options
     "DROPDOWN_PLACEHOLDER": "Wähle eine Option",
-    "DISCORD_GENERAL": "Allgemein: Discord",
-    "MINECRAFT_GENERAL": "Allgemein: Minecraft",
-    "SURVIVAL_AREA": "Survival: Bereich sichern",
-    "CREATIVE_PLOT": "Kreativ: Parzelle übertragen",
+    "DISCORD_GENERAL": "Discord",
+    "MINECRAFT_GENERAL": "Minecraft",
+    "SURVIVAL_AREA": "Bereich sichern",
+    "CREATIVE_PLOT": "Parzellen (übertragen)",
     "UNBAN_REQUEST": "Entbannungsantrag",
     "OTHER": "Sonstiges",
     
@@ -104,20 +104,20 @@ TEXTS_DE = {
     "TICKET_CLOSED_EMBED_DESC": "**Geschlossen von:** {user}\n**Grund:** {reason}\n**Server:** {guild_name}",
     
     # Creation texts
-    "LABEL_DISCORD": "Allgemein: Discord",
-    "LABEL_MINECRAFT": "Allgemein: Minecraft",
-    "LABEL_BEREICH": "Survival: Bereich sichern",
-    "LABEL_PARZELLE": "Kreativ: Parzelle übertragen",
+    "LABEL_DISCORD": "Discord",
+    "LABEL_MINECRAFT": "Minecraft",
+    "LABEL_BEREICH": "Bereich sichern",
+    "LABEL_PARZELLE": "Parzellen (übertragen)",
     "LABEL_ENTBANNUNG": "Entbannungsantrag",
     "LABEL_SONSTIGES": "Sonstiges",
     
     "PLACEHOLDER_TEXT": "Wähle eine Option",
     
-    "TITLE_DISCORD": "Allgemeines Discord",
-    "TITLE_MINECRAFT": "Allgemeines Minecraft",
+    "TITLE_DISCORD": "Discord",
+    "TITLE_MINECRAFT": "Minecraft",
     "TITLE_ENTBANNUNG": "Entbannungsantrag",
-    "TITLE_BEREICH": "Survival: Bereich sichern",
-    "TITLE_PARZELLE": "Kreativ: Parzelle übertragen",
+    "TITLE_BEREICH": "Bereich sichern",
+    "TITLE_PARZELLE": "Parzellen (übertragen)",
     "TITLE_SONSTIGES": "Sonstiges",
     
     "MESSAGE_GENERAL": "Wie können wir dir helfen? Was ist dein Anliegen?",

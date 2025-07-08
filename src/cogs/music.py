@@ -238,11 +238,11 @@ class MusicCog(commands.Cog):
             value=f"[Watch on YouTube]({song_url})\n[More from {author}](https://youtube.com/results?search_query={author.replace(' ', '+')})",
             inline=True
         )
-        # embed.add_field(
-        #     name="📊 **Statistics**",
-        #     value=f"👍 Likes: {format_number(likes)}  👁️ Views: {format_number(views)}  📅 Upload: {date}\n",
-        #     inline=False
-        # )
+        embed.add_field(
+            name="📊 **Info**",
+            value=f"{format_number(likes)} likes • {format_number(views)} views • {date}",
+            inline=False
+        )
         embed.set_thumbnail(url=thumbnail)
         embed.set_author(
             name=f"🎧 Requested by {interaction.user.display_name}",

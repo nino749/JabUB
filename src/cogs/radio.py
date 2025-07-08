@@ -59,20 +59,26 @@ class RadioCog(commands.Cog):
     @app_commands.describe(url="URL of the radio stream, a list: (https://wiki.ubuntuusers.de/Internetradio/Stationen/)")
     async def radio_command(self, interaction: discord.Interaction, url: Optional[str] = None, choice: Optional[app_commands.Choice[str]] = None):
         if not interaction.user.voice:
-            await interaction.response.send_message(
-                embed=simple_embed(f"{INFO_EMOJI} You must be in a voice channel!"),
-                ephemeral=True
+            embed = discord.Embed(
+                title="❌ Voice Channel Required",
+                description="You must be in a voice channel to use this command!",
+                color=0xFF4444
             )
+            embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
         voice_channel = interaction.user.voice.channel
         voice_client = interaction.guild.voice_client
 
         if voice_client and voice_client.is_connected() and voice_client.channel != voice_channel:
-            await interaction.response.send_message(
-                embed=simple_embed(f"{INFO_EMOJI} I'm already in another voice channel."),
-                ephemeral=True
+            embed = discord.Embed(
+                title="⚠️ Already Connected",
+                description=f"I'm already connected to **{voice_client.channel.name}**.\nPlease join that channel or disconnect me first.",
+                color=0xFFAA00
             )
+            embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
         if voice_client and voice_client.is_playing():
@@ -85,33 +91,55 @@ class RadioCog(commands.Cog):
             stream_url = url
             radio_name = "Custom Radio"
         else:
-            await interaction.response.send_message(
-                embed=simple_embed(f"{INFO_EMOJI} Please select a radio or provide a URL."), 
-                ephemeral=True
+            embed = discord.Embed(
+                title="❓ Missing Input",
+                description="Please select a radio station from the dropdown or provide a custom URL.",
+                color=0x3498DB
             )
+            embed.add_field(
+                name="💡 Tip",
+                value="You can find more radio stations here: [ubuntuusers.de](https://wiki.ubuntuusers.de/Internetradio/Stationen/)",
+                inline=False
+            )
+            embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
         
-        await interaction.response.send_message(
-            f"Loading the radio stream: {radio_name} {LOADING_EMOJI}", 
-            ephemeral=True
+        loading_embed = discord.Embed(
+            title="🔄 Loading Radio Stream",
+            description=f"Please wait while I connect to **{radio_name}**...",
+            color=0x3498DB
         )
+        loading_embed.add_field(name="📡 Station", value=radio_name, inline=True)
+        loading_embed.add_field(name="🎵 Status", value="Connecting...", inline=True)
+        loading_embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
+        
+        await interaction.response.send_message(embed=loading_embed, ephemeral=True)
 
         try:
             processed_url = await self._process_stream_url(stream_url)
             if not processed_url:
-                await interaction.followup.send(
-                    embed=simple_embed(f"{INFO_EMOJI} Failed to process the stream URL."),
-                    ephemeral=True
+                error_embed = discord.Embed(
+                    title="❌ Stream Processing Failed",
+                    description="Failed to process the provided stream URL.",
+                    color=0xFF4444
                 )
+                error_embed.add_field(name="🔗 URL", value=f"```{stream_url[:100]}{'...' if len(stream_url) > 100 else ''}```", inline=False)
+                error_embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
+                await interaction.followup.send(embed=error_embed, ephemeral=True)
                 return
                 
             stream_url = processed_url
             
         except Exception as e:
-            await interaction.followup.send(
-                embed=simple_embed(f"{INFO_EMOJI} Error processing stream URL: {str(e)}"),
-                ephemeral=True
+            error_embed = discord.Embed(
+                title="❌ Processing Error",
+                description="An error occurred while processing the stream URL.",
+                color=0xFF4444
             )
+            error_embed.add_field(name="🐛 Error Details", value=f"```{str(e)[:500]}```", inline=False)
+            error_embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
+            await interaction.followup.send(embed=error_embed, ephemeral=True)
             return
         
         await interaction.delete_original_response()
@@ -120,25 +148,46 @@ class RadioCog(commands.Cog):
             voice_client = await self._connect_to_voice(voice_channel, voice_client)
             await self._play_radio_stream(voice_client, stream_url)
             
-            embed = self._create_radio_embed(interaction.user, radio_name, stream_url)
+            embed = self._create_radio_embed(interaction.user, radio_name, stream_url, voice_channel)
             await interaction.followup.send(embed=embed)
             
         except discord.ClientException as e:
-            await interaction.followup.send(
-                embed=simple_embed(f"{INFO_EMOJI} Error playing the radio stream: {e}")
+            error_embed = discord.Embed(
+                title="❌ Playback Error",
+                description="Failed to play the radio stream.",
+                color=0xFF4444
             )
+            error_embed.add_field(name="🐛 Error Details", value=f"```{str(e)[:500]}```", inline=False)
+            error_embed.add_field(name="💡 Suggestion", value="Try selecting a different radio station or check if the URL is valid.", inline=False)
+            error_embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
+            await interaction.followup.send(embed=error_embed)
             await self._cleanup_voice_client(voice_client)
                 
         except FileNotFoundError:
-            await interaction.followup.send(
-                embed=simple_embed(f"{INFO_EMOJI} FFmpeg not found. Make sure it is installed and added to PATH.")
+            error_embed = discord.Embed(
+                title="❌ FFmpeg Not Found",
+                description="FFmpeg is required but not found on the system.",
+                color=0xFF4444
             )
+            error_embed.add_field(
+                name="🔧 Solution",
+                value="Please ensure FFmpeg is installed and added to the system PATH.",
+                inline=False
+            )
+            error_embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
+            await interaction.followup.send(embed=error_embed)
             await self._cleanup_voice_client(voice_client)
                 
         except Exception as e:
-            await interaction.followup.send(
-                embed=simple_embed(f"{INFO_EMOJI} An unexpected error occurred: {e}")
+            error_embed = discord.Embed(
+                title="❌ Unexpected Error",
+                description="An unexpected error occurred while starting the radio stream.",
+                color=0xFF4444
             )
+            error_embed.add_field(name="🐛 Error Details", value=f"```{str(e)[:500]}```", inline=False)
+            error_embed.add_field(name="💡 Suggestion", value="Please try again or contact support if the issue persists.", inline=False)
+            error_embed.set_author(name=interaction.user.display_name, icon_url=interaction.user.display_avatar.url)
+            await interaction.followup.send(embed=error_embed)
             await self._cleanup_voice_client(voice_client)
 
     async def _process_stream_url(self, url: str) -> Optional[str]:
@@ -223,16 +272,52 @@ class RadioCog(commands.Cog):
         source = discord.FFmpegPCMAudio(stream_url, **ffmpeg_options)
         voice_client.play(source)
 
-    def _create_radio_embed(self, user: discord.Member, radio_name: str, stream_url: str) -> discord.Embed:
+    def _create_radio_embed(self, user: discord.Member, radio_name: str, stream_url: str, voice_channel: discord.VoiceChannel) -> discord.Embed:
         embed = discord.Embed(
-            title="📻 Radio",
-            description=f"Now playing **{radio_name}** live radio! {DANCE_EMOJI}",
-            color=0x00FF00
+            title="📻 Radio Stream Started",
+            description=f"Now broadcasting **{radio_name}** live! 🎵",
+            color=0x00FF88
         )
-        embed.add_field(name="**Radio Station:**", value=radio_name, inline=False)
-        embed.add_field(name="**Stream URL:**", value=f"```{stream_url[:100]}{'...' if len(stream_url) > 100 else ''}```", inline=False)
-        embed.set_author(name=user.display_name, icon_url=user.display_avatar.url)
-        embed.set_footer(text=EMBED_FOOTER)
+        
+        embed.add_field(
+            name="📡 Radio Station",
+            value=f"```{radio_name}```",
+            inline=True
+        )
+        
+        embed.add_field(
+            name="🔊 Voice Channel",
+            value=f"```{voice_channel.name}```",
+            inline=True
+        )
+        
+        embed.add_field(
+            name="👥 Listeners",
+            value=f"```{len(voice_channel.members)}```",
+            inline=True
+        )
+        
+        embed.add_field(
+            name="🔗 Stream URL",
+            value=f"```{stream_url[:80]}{'...' if len(stream_url) > 80 else ''}```",
+            inline=False
+        )
+        
+        embed.add_field(
+            name="💡 Tips",
+            value="• Use `/stop` to stop the radio\n• Join the voice channel to listen\n• Stream quality depends on your connection",
+            inline=False
+        )
+        
+        embed.set_author(
+            name=f"Requested by {user.display_name}",
+            icon_url=user.display_avatar.url
+        )
+        
+        embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/512/3687/3687288.png")
+        embed.set_footer(text=f"{EMBED_FOOTER} | Radio streaming active")
+        embed.timestamp = discord.utils.utcnow()
+        
         return embed
 
     async def _cleanup_voice_client(self, voice_client: Optional[discord.VoiceClient]):

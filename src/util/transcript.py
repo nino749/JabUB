@@ -13,15 +13,30 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
     guild = interaction.guild
     TICKET_CREATOR_ID = get_ticket_creator(interaction.channel.id) 
     if TICKET_CREATOR_ID is None:
-        await interaction.response.send_message("Error, member wurde nicht gefunden.", ephemeral=True)
+        error_embed = discord.Embed(
+            title="❌ Fehler",
+            description="Error, member wurde nicht gefunden.",
+            color=0xff0000
+        )
+        await interaction.response.send_message(embed=error_embed, ephemeral=True)
         return
 
     TICKET_CREATOR = guild.get_member(TICKET_CREATOR_ID)
     if not any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles):
-        await interaction.response.send_message("Du hast keine Berechtigung, um diese Aktion auszuführen.", ephemeral=True, delete_after=10)
+        permission_embed = discord.Embed(
+            title="❌ Keine Berechtigung",
+            description="Du hast keine Berechtigung, um diese Aktion auszuführen.",
+            color=0xff0000
+        )
+        await interaction.response.send_message(embed=permission_embed, ephemeral=True, delete_after=10)
         return
 
-    await interaction.response.send_message(f"> {TRANSCRIPT_EMOJI} Erstelle das Transkript {LOADING_EMOJI}")
+    loading_embed = discord.Embed(
+        title=f"{TRANSCRIPT_EMOJI} Transkript wird erstellt",
+        description=f"Erstelle das Transkript {LOADING_EMOJI}",
+        color=0xffff00
+    )
+    await interaction.response.send_message(embed=loading_embed)
 
     channel = interaction.channel
     render_messages = []
@@ -91,7 +106,12 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
     try:
         template = env.get_template('src/transcript_template.html')
     except FileNotFoundError:
-        await interaction.edit_original_response("Die Datei 'transcript_template.html' wurde nicht gefunden.")
+        file_error_embed = discord.Embed(
+            title="❌ Datei nicht gefunden",
+            description="Die Datei 'transcript_template.html' wurde nicht gefunden.",
+            color=0xff0000
+        )
+        await interaction.edit_original_response(embed=file_error_embed)
         return
 
     rendered_html = template.render(
@@ -133,7 +153,7 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
         description="**Stats**",
         color=0x00ff00
     )
-
+ 
     embed.set_author(name=TICKET_CREATOR if TICKET_CREATOR else None, icon_url=TICKET_CREATOR.avatar.url if TICKET_CREATOR else None)
     embed.add_field(name="Beschreibung", value=summary if summary else "Keine Beschreibung gegeben.", inline=False)
     embed.add_field(name="Nachrichten", value=message_count, inline=True)
@@ -144,4 +164,10 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
     embed.timestamp = discord.utils.utcnow()
     
     transcript_message = await trans_channel.send(embed=embed, file=transcript_file_trans)
-    await interaction.edit_original_response(content=f"> {TRANSCRIPT_EMOJI} Transkript in {trans_channel.mention} erstellt! {transcript_message.jump_url}")
+    
+    success_embed = discord.Embed(
+        title=f"{TRANSCRIPT_EMOJI} Transkript erstellt",
+        description=f"Transkript wurde in {trans_channel.mention} erstellt!\n[Zum Transkript]({transcript_message.jump_url})",
+        color=0x00ff00
+    )
+    await interaction.edit_original_response(embed=success_embed)
