@@ -3,6 +3,7 @@ from discord.ext import commands
 from constants import *
 from discord import *
 import random
+import time
 
 async def random_fail_message():
     messages = [
@@ -24,6 +25,7 @@ class CountingCog(commands.Cog):
         self.bot = bot
         self.counting_channels = {}
         self.last_user = {}
+        self.user_cooldowns = {}
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -33,11 +35,21 @@ class CountingCog(commands.Cog):
         if message.channel.name != "counting":
             return
         
+        cooldown_key = (message.channel.id, message.author.id)
+        current_time = time.time()
+        
+        if cooldown_key in self.user_cooldowns:
+            if current_time - self.user_cooldowns[cooldown_key] < 3:
+                await message.delete()
+                return
+        
         try:
             number = int(eval(message.content.strip()))
         except:
             await message.delete()
             return
+        
+        self.user_cooldowns[cooldown_key] = current_time
         
         user = message.author
         user_name = user.name
@@ -56,6 +68,7 @@ class CountingCog(commands.Cog):
 
         if self.last_user[channel_id] == message.author.id:
             await message.delete(delay=0)
+            await webhook.delete()
             return
 
         if number == expected_number:
@@ -80,4 +93,3 @@ class CountingCog(commands.Cog):
             self.counting_channels[channel_id] = 0
             
         await webhook.delete()
-
