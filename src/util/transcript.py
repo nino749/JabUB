@@ -9,9 +9,13 @@ from util.ticket_creator import get_ticket_creator, get_ticket_users
 from collections import Counter
 import re
 
+EMOJI_PATTERN = re.compile(r'<(a?):([^:]+):(\d+)>')
+URL_PATTERN = re.compile(r'(https?://\S+)')
+
 async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
     guild = interaction.guild
-    TICKET_CREATOR_ID = get_ticket_creator(interaction.channel.id) 
+    TICKET_CREATOR_ID = get_ticket_creator(interaction.channel.id)
+    
     if TICKET_CREATOR_ID is None:
         error_embed = discord.Embed(
             title="❌ Fehler",
@@ -22,6 +26,7 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
         return
 
     TICKET_CREATOR = guild.get_member(TICKET_CREATOR_ID)
+    
     if not any(role.name in [MOD, TRAIL_MOD] for role in interaction.user.roles):
         permission_embed = discord.Embed(
             title="❌ Keine Berechtigung",
@@ -40,29 +45,31 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
 
     channel = interaction.channel
     render_messages = []
+    message_count = 0
+    user_message_counts = Counter()
 
     async for msg in channel.history(limit=None):
         if not msg.clean_content and not msg.embeds and not msg.attachments:
             continue
             
+        if not msg.author.bot:
+            message_count += 1
+            user_message_counts[msg.author.name] += 1
+
         embed_data = []
         for e in msg.embeds:
-            title = markdown.markdown(e.title) if e.title else None
-            description = markdown.markdown(e.description) if e.description else None
-            
-            processed_fields = []
-            for field in e.fields:
-                field_name = markdown.markdown(field.name) if field.name else ""
-                field_value = markdown.markdown(field.value) if field.value else ""
-                processed_fields.append({
-                    "name": field_name,
-                    "value": field_value,
+            processed_fields = [
+                {
+                    "name": markdown.markdown(field.name) if field.name else "",
+                    "value": markdown.markdown(field.value) if field.value else "",
                     "inline": field.inline
-                })
+                }
+                for field in e.fields
+            ]
             
             embed_dict = {
-                "title": title,
-                "description": description,
+                "title": markdown.markdown(e.title) if e.title else None,
+                "description": markdown.markdown(e.description) if e.description else None,
                 "color": f"#{e.color.value:06x}" if e.color else "#4f545c",
                 "image_url": e.image.url if e.image else None,
                 "thumbnail_url": e.thumbnail.url if e.thumbnail else None,
@@ -70,33 +77,19 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
             }
             embed_data.append(embed_dict)
 
-        content = msg.clean_content
+        content = _process_message_content(msg.clean_content)
         
-        emoji_pattern = r'<(a?):([^:]+):(\d+)>'
-        
-        url_pattern = r'(https?://\S+)'
-        content = re.sub(url_pattern, r'<a href="\1" target="_blank">\1</a>', content)
-        
-        def replace_emoji(match):
-            animated = match.group(1) == 'a'
-            name = match.group(2)
-            emoji_id = match.group(3)
-            ext = 'gif' if animated else 'png'
-            emoji_url = f"https://cdn.discordapp.com/emojis/{emoji_id}.{ext}"
-            return f'<img src="{emoji_url}" alt=":{name}:" title=":{name}:" class="emoji" width="22" height="22">'
-        
-        content = re.sub(emoji_pattern, replace_emoji, content)
-        html_content = markdown.markdown(content)
+        attachments = [
+            att.url for att in msg.attachments
+            if att.content_type and att.content_type.startswith("image/")
+        ]
 
         render_messages.append({
             "author_name": msg.author.display_name,
             "avatar_url": msg.author.display_avatar.url,
             "timestamp": msg.created_at.strftime('%d-%m-%Y %H:%M'),
-            "content": html_content,
-            "attachments": [
-                att.url for att in msg.attachments
-                if att.content_type and att.content_type.startswith("image/")
-            ],
+            "content": content,
+            "attachments": attachments,
             "embeds": embed_data
         })
 
@@ -119,31 +112,44 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
         messages=render_messages
     )
 
-    buffer = io.BytesIO(rendered_html.encode())
-    print(f"DEBUG     Größe des Buffers (Follow-up): {buffer.getbuffer().nbytes} Bytes")
+    users = await get_ticket_users(interaction.channel)
+    member_count = len([user for user in users if not user.bot])
 
+    buffer = io.BytesIO(rendered_html.encode())
+    transcript_file = discord.File(buffer, filename=f"transcript von {channel.name}.html")
+    
     trans_channel = bot.get_channel(int(TRANS_CHANNEL_ID))
     
-    buffer_trans = io.BytesIO(rendered_html.encode())
-
-    print(f"DEBUG     Größe des Buffers (trans_channel): {buffer_trans.getbuffer().nbytes} Bytes")
-    transcript_file_trans = discord.File(buffer_trans, filename=f"transcript von {channel.name}.html")
+    embed = _create_transcript_embed(
+        channel, TICKET_CREATOR, summary, message_count, 
+        member_count, user_message_counts, interaction.user
+    )
     
-    message_count = 0
-    async for message in channel.history(limit=None):
-        if not message.author.bot:
-            message_count += 1
-            
-    member_count = 0
-    users = await get_ticket_users(interaction.channel)
-    user_list = [user for user in users if not user.bot]
-    member_count = len(user_list)
+    transcript_message = await trans_channel.send(embed=embed, file=transcript_file)
+    
+    success_embed = discord.Embed(
+        title=f"{TRANSCRIPT_EMOJI} Transkript erstellt",
+        description=f"Transkript wurde in {trans_channel.mention} erstellt!\n[Zum Transkript]({transcript_message.jump_url})",
+        color=0x00ff00
+    )
+    await interaction.edit_original_response(embed=success_embed)
 
-    user_message_counts = Counter()
-    async for message in channel.history(limit=None):
-        if not message.author.bot:
-            user_message_counts[message.author.name] += 1
+def _process_message_content(content):
+    content = URL_PATTERN.sub(r'<a href="\1" target="_blank">\1</a>', content)
+    
+    def replace_emoji(match):
+        animated = match.group(1) == 'a'
+        name = match.group(2)
+        emoji_id = match.group(3)
+        ext = 'gif' if animated else 'png'
+        emoji_url = f"https://cdn.discordapp.com/emojis/{emoji_id}.{ext}"
+        return f'<img src="{emoji_url}" alt=":{name}:" title=":{name}:" class="emoji" width="22" height="22">'
+    
+    content = EMOJI_PATTERN.sub(replace_emoji, content)
+    return markdown.markdown(content)
 
+def _create_transcript_embed(channel, ticket_creator, summary, message_count, 
+                           member_count, user_message_counts, interaction_user):
     user_message_count_str = "\n".join(
         f"* {user} ({count})" for user, count in user_message_counts.items()
     )
@@ -153,21 +159,16 @@ async def trans_ticket(interaction: discord.Interaction, summary: str, bot):
         description="**Stats**",
         color=0x00ff00
     )
- 
-    embed.set_author(name=TICKET_CREATOR if TICKET_CREATOR else None, icon_url=TICKET_CREATOR.avatar.url if TICKET_CREATOR else None)
-    embed.add_field(name="Beschreibung", value=summary if summary else "Keine Beschreibung gegeben.", inline=False)
+    
+    if ticket_creator:
+        embed.set_author(name=ticket_creator, icon_url=ticket_creator.avatar.url)
+    
+    embed.add_field(name="Beschreibung", value=summary or "Keine Beschreibung gegeben.", inline=False)
     embed.add_field(name="Nachrichten", value=message_count, inline=True)
-    embed.add_field(name="Erstellt von", value=TICKET_CREATOR if TICKET_CREATOR else None, inline=True)
+    embed.add_field(name="Erstellt von", value=ticket_creator or "Unbekannt", inline=True)
     embed.add_field(name=f"Benutzer (Insgesamt: {member_count})", value=user_message_count_str, inline=False)
-    embed.set_thumbnail(url=interaction.user.avatar.url)
+    embed.set_thumbnail(url=interaction_user.avatar.url)
     embed.set_footer(text=EMBED_FOOTER)
     embed.timestamp = discord.utils.utcnow()
     
-    transcript_message = await trans_channel.send(embed=embed, file=transcript_file_trans)
-    
-    success_embed = discord.Embed(
-        title=f"{TRANSCRIPT_EMOJI} Transkript erstellt",
-        description=f"Transkript wurde in {trans_channel.mention} erstellt!\n[Zum Transkript]({transcript_message.jump_url})",
-        color=0x00ff00
-    )
-    await interaction.edit_original_response(embed=success_embed)
+    return embed
