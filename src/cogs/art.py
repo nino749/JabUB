@@ -16,7 +16,6 @@ class ArtCog(commands.Cog):
         async def send_call(interaction: discord.Interaction):
             await interaction.response.defer()
             user = interaction.user
-            ZWSP = '\u200b'
             await user.send(f"Here is your Ascii art!! ```ansi\n{art}\n```")
         
         next_btn = Button(style=GREEN, label="Next", emoji="➡️")
@@ -38,7 +37,6 @@ class ArtCog(commands.Cog):
         async def send_call(interaction: discord.Interaction):
             await interaction.response.defer()
             user = interaction.user
-            ZWSP = '\u200b'
             await user.send(f"Here is your Ascii art!! ```ansi\n{art}\n```")
         
         next_btn = Button(style=GREEN, label="Next", emoji="➡️")
@@ -55,6 +53,3 @@ class ArtCog(commands.Cog):
 
     async def cog_load(self):
         self.bot.tree.add_command(self.art, guild=discord.Object(id=SYNC_SERVER))
-
-    
-        
